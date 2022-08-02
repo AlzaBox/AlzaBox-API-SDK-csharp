@@ -327,3 +327,5 @@ appsettings.Development.json
 appsettings.Local.json
 SEPCore/wwwroot/lib/
 revolt*.bak
+.vscode/tasks.json
+.vscode/launch.json
