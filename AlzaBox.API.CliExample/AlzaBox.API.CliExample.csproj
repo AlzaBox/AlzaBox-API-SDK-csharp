@@ -9,8 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ABAPI.Models\ABAPI.Models.csproj" />
-      <ProjectReference Include="..\ABAPI.Services\ABAPI.Services.csproj" />
+      <ProjectReference Include="..\AlzaBox.API\AlzaBox.API.csproj" />
     </ItemGroup>
 
     <ItemGroup>

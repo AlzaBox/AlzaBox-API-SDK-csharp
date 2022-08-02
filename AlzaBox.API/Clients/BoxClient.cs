@@ -1,19 +1,19 @@
 using System;
 using System.Net;
 using System.Text.Json;
-using ABAPI.Models;
+using AlzaBox.API.Models;
 using RestSharp;
 using RestSharp.Authenticators;
 using RestSharp.Authenticators.OAuth2;
 
-namespace ABAPI.Services
+namespace AlzaBox.API.Clients
 {
-    public class BoxService
+    public class BoxClient
     {
         private readonly RestClient _client;
         private string? accessToken;
 
-        public BoxService(RestClient client, string? accessToken = null)
+        public BoxClient(RestClient client, string? accessToken = null)
         {
             _client = client;
             this.accessToken = accessToken;

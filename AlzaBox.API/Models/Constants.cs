@@ -1,6 +1,6 @@
 using System.Configuration;
 
-namespace ABAPI.Models;
+namespace AlzaBox.API.Models;
 
 public static class Constants
 {

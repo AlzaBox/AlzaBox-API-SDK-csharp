@@ -1,24 +1,23 @@
 using System.Net;
 using System.Text.Json;
-using ABAPI.Models;
-using ABAPI.Services.Helpers;
+using AlzaBox.API.Models;
 using RestSharp;
 
-namespace ABAPI.Services;
+namespace AlzaBox.API.Clients;
 
-public class ReservationService
+public class ReservationClient
 {
     private readonly RestClient _client;
     private readonly string _accessToken;
 
-    public ReservationService(RestClient client, string accessToken)
+    public ReservationClient(RestClient client, string? accessToken = null)
     {
         _client = client;
         _accessToken = accessToken;
     }
 
 
-    public async Task<ABAPI.Models.Reservation> Get(string reservationId)
+    public async Task<AlzaBox.API.Models.Reservation> Get(string reservationId)
     {
         var response = await GetBase(reservationId);
         if (response.Data != null)
@@ -31,13 +30,13 @@ public class ReservationService
         }
     }
 
-    public async Task<ReservationsResponse> GetAll(int pageLimit = 10, int pageOffset = 0, string status = "")
+    public async Task<AlzaBox.API.Models.ReservationsResponse> GetAll(int pageLimit = 10, int pageOffset = 0, string status = "")
     {
         var response = await GetBase("", pageLimit, pageOffset, status);
         return response;
     }
 
-    private async Task<ReservationsResponse> GetBase(string reservationId = "", int pageLimit = 10, int pageOffset = 0,
+    private async Task<AlzaBox.API.Models.ReservationsResponse> GetBase(string reservationId = "", int pageLimit = 10, int pageOffset = 0,
         string status = "")
     {
         var reservationRequest = new RestRequest();
@@ -94,7 +93,7 @@ public class ReservationService
     public async Task<ReservationResponse> Reserve(string id, int boxId, string packageNumber, DateTime expirationDate,
         float depth, float height, float width)
     {
-        var expirationDateUtcString = expirationDate.ToUtcString();
+        var expirationDateUtcString = expirationDate.ToString("O");
         var packages = new List<ReservationRequestPackages>();
         packages.Add(new ReservationRequestPackages()
         {
@@ -180,7 +179,7 @@ public class ReservationService
 
     public async Task<ReservationResponse> ExtendReservation(string reservationId, DateTime expirationDate)
     {
-        var expirationDateUtcString = expirationDate.ToUtcString();
+        var expirationDateUtcString = expirationDate.ToString("O");
         var reservationRequestBody = new ReservationRequest()
         {
             Data = new ReservationRequestData()
