@@ -5,8 +5,8 @@ namespace AlzaBox.API.Clients;
 
 public class AlzaBoxClient
 {
-    private readonly string _IDMUrl;
-    private readonly string _alzaBoxApiUrl;
+    private readonly string _alzaBoxIdmUrl;
+    private readonly string _alzaBoxLockerUrl;
     private readonly RestClient _restAuthClient;
     private readonly RestClient _restABClient;
     private readonly AuthenticationClient _authenticationClient;
@@ -17,13 +17,13 @@ public class AlzaBoxClient
     public ReservationClient Reservations { get; set; }
     
     
-    public AlzaBoxClient(string IDMUrl, string alzaBoxApiUrl)
+    public AlzaBoxClient(string alzaBoxIDMUrl, string alzaBoxLockerUrl)
     {
-        _IDMUrl = IDMUrl;
-        _alzaBoxApiUrl = alzaBoxApiUrl;
-        _restAuthClient = new RestClient(_IDMUrl);
-        _restABClient = new RestClient(_alzaBoxApiUrl);
-        _authenticationClient = new AuthenticationClient(IDMUrl);
+        _alzaBoxIdmUrl = alzaBoxIDMUrl;
+        _alzaBoxLockerUrl = alzaBoxLockerUrl;
+        _restAuthClient = new RestClient(_alzaBoxIdmUrl);
+        _restABClient = new RestClient(_alzaBoxLockerUrl);
+        _authenticationClient = new AuthenticationClient(alzaBoxIDMUrl);
         Boxes = new BoxClient(_restABClient);
         Reservations = new ReservationClient(_restABClient);
     }

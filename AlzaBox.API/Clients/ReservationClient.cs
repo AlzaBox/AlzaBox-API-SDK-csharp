@@ -90,8 +90,15 @@ public class ReservationClient
         }
     }
 
+    public async Task<ReservationResponse> Reserve(string id, int boxId, string packageNumber, int hoursFromNow)
+    {
+        var expirationDate = DateTime.Now.AddHours(hoursFromNow);
+        var reservationResponse = await Reserve(id, boxId, packageNumber, expirationDate);
+        return reservationResponse;
+    }
+
     public async Task<ReservationResponse> Reserve(string id, int boxId, string packageNumber, DateTime expirationDate,
-        float depth, float height, float width)
+        float? depth = null, float? height = null, float? width = null)
     {
         var expirationDateUtcString = expirationDate.ToString("O");
         var packages = new List<ReservationRequestPackages>();
@@ -175,6 +182,13 @@ public class ReservationClient
         {
             return null;
         }
+    }
+
+    public async Task<ReservationResponse> ExtendReservation(string reservationId, int hoursFromNow = 24)
+    {
+        var expirationDate = DateTime.Now.AddHours(hoursFromNow);
+        var reservationResponse = await ExtendReservation(reservationId, expirationDate);
+        return reservationResponse;
     }
 
     public async Task<ReservationResponse> ExtendReservation(string reservationId, DateTime expirationDate)
