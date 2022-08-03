@@ -161,7 +161,7 @@ public class ReservationClient
         }
     }
 
-    public async Task<ReservationResponse> GetReservationStatus(string reservationId)
+    public async Task<ReservationsResponse> GetReservationStatus(string reservationId)
     {
         var reservationRequest = new RestRequest();
         reservationRequest.Resource = "reservation";
@@ -175,8 +175,8 @@ public class ReservationClient
 
         if (response.IsSuccessful)
         {
-            var reservation = JsonSerializer.Deserialize<ReservationResponse>(response.Content);
-            return reservation;
+            var reservations = JsonSerializer.Deserialize<ReservationsResponse>(response.Content);
+            return reservations;
         }
         else
         {
