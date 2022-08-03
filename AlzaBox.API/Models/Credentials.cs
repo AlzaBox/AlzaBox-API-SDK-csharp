@@ -1,4 +1,4 @@
-namespace ABAPI.Models;
+namespace AlzaBox.API.Models;
 
 public class Credentials
 {

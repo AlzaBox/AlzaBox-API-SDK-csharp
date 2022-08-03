@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace ABAPI.Models;
+namespace AlzaBox.API.Models;
 
 public class Reservation
 {
@@ -65,13 +65,13 @@ public class ReservationRequestPaymentData
 public class ReservationRequestPackages
 {
     [JsonPropertyName("depth")]
-    public float Depth { get; set; }
+    public float? Depth { get; set; }
 
     [JsonPropertyName("height")]
-    public float Height { get; set; }
+    public float? Height { get; set; }
 
     [JsonPropertyName("width")]
-    public float Width { get; set; }
+    public float? Width { get; set; }
 
     [JsonPropertyName("barCode")]
     public string? BarCode { get; set; }

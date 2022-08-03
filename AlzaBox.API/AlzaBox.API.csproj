@@ -4,15 +4,15 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>ABAPIExamples</RootNamespace>
+        <Title>AlzaBox API SDK</Title>
+        <Description>Easier use of AlzaBox API</Description>
+        <Copyright>Alza.cz, a.s.</Copyright>
+        <PackageProjectUrl>alzabox.co</PackageProjectUrl>
+        <PackageTags>alzabox api</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="RestSharp" Version="108.0.1" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\ABAPI.Models\ABAPI.Models.csproj" />
     </ItemGroup>
 
 </Project>

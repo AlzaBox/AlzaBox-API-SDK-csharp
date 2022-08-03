@@ -1,15 +1,14 @@
-using System.Data;
 using RestSharp;
 using RestSharp.Serializers;
-using ABAPI.Models;
+using AlzaBox.API.Models;
 
-namespace ABAPI.Services;
+namespace AlzaBox.API.Clients;
 
-public class AuthenticationService
+public class AuthenticationClient
 {
     private readonly RestClient _restClient;
 
-    public AuthenticationService(string identityEnvironment)
+    public AuthenticationClient(string identityEnvironment)
     {
         _restClient = new RestClient(identityEnvironment);
     }

@@ -1,24 +1,23 @@
 using System.Net;
 using System.Text.Json;
-using ABAPI.Models;
-using ABAPI.Services.Helpers;
+using AlzaBox.API.Models;
 using RestSharp;
 
-namespace ABAPI.Services;
+namespace AlzaBox.API.Clients;
 
-public class ReservationService
+public class ReservationClient
 {
     private readonly RestClient _client;
     private readonly string _accessToken;
 
-    public ReservationService(RestClient client, string accessToken)
+    public ReservationClient(RestClient client, string? accessToken = null)
     {
         _client = client;
         _accessToken = accessToken;
     }
 
 
-    public async Task<ABAPI.Models.Reservation> Get(string reservationId)
+    public async Task<AlzaBox.API.Models.Reservation> Get(string reservationId)
     {
         var response = await GetBase(reservationId);
         if (response.Data != null)
@@ -31,13 +30,13 @@ public class ReservationService
         }
     }
 
-    public async Task<ReservationsResponse> GetAll(int pageLimit = 10, int pageOffset = 0, string status = "")
+    public async Task<AlzaBox.API.Models.ReservationsResponse> GetAll(int pageLimit = 10, int pageOffset = 0, string status = "")
     {
         var response = await GetBase("", pageLimit, pageOffset, status);
         return response;
     }
 
-    private async Task<ReservationsResponse> GetBase(string reservationId = "", int pageLimit = 10, int pageOffset = 0,
+    private async Task<AlzaBox.API.Models.ReservationsResponse> GetBase(string reservationId = "", int pageLimit = 10, int pageOffset = 0,
         string status = "")
     {
         var reservationRequest = new RestRequest();
@@ -91,10 +90,17 @@ public class ReservationService
         }
     }
 
-    public async Task<ReservationResponse> Reserve(string id, int boxId, string packageNumber, DateTime expirationDate,
-        float depth, float height, float width)
+    public async Task<ReservationResponse> Reserve(string id, int boxId, string packageNumber, int hoursFromNow)
     {
-        var expirationDateUtcString = expirationDate.ToUtcString();
+        var expirationDate = DateTime.Now.AddHours(hoursFromNow);
+        var reservationResponse = await Reserve(id, boxId, packageNumber, expirationDate);
+        return reservationResponse;
+    }
+
+    public async Task<ReservationResponse> Reserve(string id, int boxId, string packageNumber, DateTime expirationDate,
+        float? depth = 1, float? height = 1, float? width = 1)
+    {
+        var expirationDateUtcString = expirationDate.ToString("O");
         var packages = new List<ReservationRequestPackages>();
         packages.Add(new ReservationRequestPackages()
         {
@@ -155,7 +161,7 @@ public class ReservationService
         }
     }
 
-    public async Task<ReservationResponse> GetReservationStatus(string reservationId)
+    public async Task<ReservationsResponse> GetReservationStatus(string reservationId)
     {
         var reservationRequest = new RestRequest();
         reservationRequest.Resource = "reservation";
@@ -169,8 +175,8 @@ public class ReservationService
 
         if (response.IsSuccessful)
         {
-            var reservation = JsonSerializer.Deserialize<ReservationResponse>(response.Content);
-            return reservation;
+            var reservations = JsonSerializer.Deserialize<ReservationsResponse>(response.Content);
+            return reservations;
         }
         else
         {
@@ -178,9 +184,16 @@ public class ReservationService
         }
     }
 
+    public async Task<ReservationResponse> ExtendReservation(string reservationId, int hoursFromNow = 24)
+    {
+        var expirationDate = DateTime.Now.AddHours(hoursFromNow);
+        var reservationResponse = await ExtendReservation(reservationId, expirationDate);
+        return reservationResponse;
+    }
+
     public async Task<ReservationResponse> ExtendReservation(string reservationId, DateTime expirationDate)
     {
-        var expirationDateUtcString = expirationDate.ToUtcString();
+        var expirationDateUtcString = expirationDate.ToString("O");
         var reservationRequestBody = new ReservationRequest()
         {
             Data = new ReservationRequestData()

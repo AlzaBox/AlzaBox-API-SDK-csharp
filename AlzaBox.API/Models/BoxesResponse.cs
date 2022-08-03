@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text.Json.Serialization;
 
-namespace ABAPI.Models;
+namespace AlzaBox.API.Models;
 
 public class BoxesResponse : BaseResponse
 {
