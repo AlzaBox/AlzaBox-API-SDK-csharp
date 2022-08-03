@@ -15,15 +15,10 @@ public class AlzaBoxClient
     public ReservationClient Reservations { get; set; }
     
     
-    public AlzaBoxClient(string? alzaBoxIDMUrl = null, string? alzaBoxLockerUrl = null)
+    public AlzaBoxClient(string? abIdmUrl = Constants.TestIdentityBaseUrl, string? abConnectorUrl = Constants.TestParcelLockersBaseUrl)
     {
-        alzaBoxIDMUrl ??= Constants.TestIdentityBaseUrl;
-        alzaBoxLockerUrl ??= Constants.TestParcelLockersBaseUrl;
-        
-        _authenticationClient = new AuthenticationClient(alzaBoxIDMUrl);
-        _restABClient = new RestClient(alzaBoxLockerUrl);
-        Boxes = new BoxClient(_restABClient);
-        Reservations = new ReservationClient(_restABClient);
+        _authenticationClient = new AuthenticationClient(abIdmUrl);
+        _restABClient = new RestClient(abConnectorUrl);
     }
 
     public async Task<AuthenticationResponse> Login(string username, string password, string clientId,
@@ -37,7 +32,11 @@ public class AlzaBoxClient
             ClientSecret = clientSecret
         };
         var authenticationResponse = await _authenticationClient.Authenticate(credentials);
+
         AccessToken = authenticationResponse.AccessToken;
+        Boxes = new BoxClient(_restABClient, AccessToken);
+        Reservations = new ReservationClient(_restABClient, AccessToken);
+        
         return authenticationResponse;
     }
 }

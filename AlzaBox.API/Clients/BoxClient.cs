@@ -15,7 +15,7 @@ namespace AlzaBox.API.Clients
             _client = client;
             this.accessToken = accessToken;
         }
-
+        
         public async Task<BoxesResponse> Get(int boxId)
         {
             var response = await this.GetBoxBase(boxId);

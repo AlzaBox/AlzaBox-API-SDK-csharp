@@ -98,7 +98,7 @@ public class ReservationClient
     }
 
     public async Task<ReservationResponse> Reserve(string id, int boxId, string packageNumber, DateTime expirationDate,
-        float? depth = null, float? height = null, float? width = null)
+        float? depth = 1, float? height = 1, float? width = 1)
     {
         var expirationDateUtcString = expirationDate.ToString("O");
         var packages = new List<ReservationRequestPackages>();
