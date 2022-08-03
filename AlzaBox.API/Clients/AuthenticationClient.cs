@@ -1,4 +1,3 @@
-using System.Data;
 using RestSharp;
 using RestSharp.Serializers;
 using AlzaBox.API.Models;
