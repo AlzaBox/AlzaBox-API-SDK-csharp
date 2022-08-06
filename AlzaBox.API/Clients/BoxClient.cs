@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using AlzaBox.API.Extensions;
 using AlzaBox.API.Models;
 using RestSharp;
 
@@ -7,13 +8,11 @@ namespace AlzaBox.API.Clients
 {
     public class BoxClient
     {
-        private readonly RestClient _client;
-        private string? accessToken;
+        private readonly HttpClient _client;
 
-        public BoxClient(RestClient client, string? accessToken = null)
+        public BoxClient(HttpClient client)
         {
             _client = client;
-            this.accessToken = accessToken;
         }
         
         public async Task<BoxesResponse> Get(int boxId)
@@ -61,43 +60,52 @@ namespace AlzaBox.API.Clients
         private async Task<BoxesResponse> GetBoxBase(int? boxId = null, double? packageWidth = null,
             double? packageHeight = null, double? packageDepth = null, bool full = false, bool occupancy = false)
         {
-            var boxRequest = await CreateBaseBoxRequest();
+            var query = new Dictionary<string, string>()
+            {
+                ["page[limit]"] = pageLimit.ToString(),
+                ["page[Offset]"] = pageOffset.ToString(),
+            };
+
 
             if (packageDepth.HasValue)
             {
-                boxRequest.AddParameter("filter[package][depth]", packageDepth.Value);
+                //boxRequest.AddParameter("filter[package][depth]", packageDepth.Value);
+                query.Add("filter[package][depth]", packageDepth.Value.ToString());
             }
 
             if (packageHeight.HasValue)
             {
-                boxRequest.AddParameter("filter[package][height]", packageHeight.Value);
+                //boxRequest.AddParameter("filter[package][height]", packageHeight.Value);
+                query.Add("filter[package][height]", packageHeight.Value.ToString());
             }
             
             if (packageWidth.HasValue)
             {
-                boxRequest.AddParameter("filter[package][width]", packageWidth.Value);
+                //boxRequest.AddParameter("filter[package][width]", packageWidth.Value);
+                query.Add("filter[package][width]", packageWidth.Value.ToString());
             }
             
             if ((boxId.HasValue) && (boxId > 0))
             {
-                boxRequest.AddParameter("filter[id]", boxId.Value);
+                //boxRequest.AddParameter("filter[id]", boxId.Value);
+                query.Add("filter[id]", boxId.Value.ToString());
             }
 
             if ((boxId > 0) && full)
             {
-                boxRequest.AddParameter("fields[box]", "fittingPackages");
-                boxRequest.AddParameter("fields[box]", "unavaiableReason");
-                boxRequest.AddParameter("fields[box]", "tooLargePackages");
-                boxRequest.AddParameter("fields[box]", "requiredSlots");
+                query.Add("fields[box]", "fittingPackages");
+                query.Add("fields[box]", "unavaiableReason");
+                query.Add("fields[box]", "tooLargePackages");
+                query.Add("fields[box]", "requiredSlots");
             }
 
             if (occupancy)
             {
-                boxRequest.AddParameter("fields[box]", "occupancy");
+                query.Add("fields[box]", "occupancy");
             }
 
-            var response = await _client.ExecuteAsync(boxRequest, Method.Get);
-
+            var response = await _client.GetWithQueryStringAsync("box", query);
+            
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 throw new Exception()
