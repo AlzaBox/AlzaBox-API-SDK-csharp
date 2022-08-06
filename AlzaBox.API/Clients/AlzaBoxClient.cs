@@ -31,7 +31,8 @@ public class AlzaBoxClient
             ClientId = clientId,
             ClientSecret = clientSecret
         };
-        var authenticationResponse = await _authenticationClient.Authenticate(credentials);
+        //var authenticationResponse = await _authenticationClient.Authenticate(credentials);
+        var authenticationResponse = await _authenticationClient.Authenticate2(credentials);
 
         AccessToken = authenticationResponse.AccessToken;
         Boxes = new BoxClient(_restABClient, AccessToken);
