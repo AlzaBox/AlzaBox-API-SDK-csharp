@@ -1,19 +1,13 @@
-using System.Net;
-using System.Text.Json;
 using AlzaBox.API.Extensions;
 using AlzaBox.API.Models;
-using RestSharp;
 
 namespace AlzaBox.API.Clients
 {
     public class BoxClient
     {
-        private readonly HttpClient _client;
+        private readonly HttpClient _httpClient;
 
-        public BoxClient(HttpClient client)
-        {
-            _client = client;
-        }
+        public BoxClient(HttpClient httpClient) => _httpClient = httpClient;
         
         public async Task<BoxesResponse> Get(int boxId)
         {
@@ -44,8 +38,8 @@ namespace AlzaBox.API.Clients
         {
             var boxContent = new BoxesResponse();
             var searched = new List<Box>();
-            var allboxes = await GetBoxBase(null, null, null, null, full, occupancy);
-            foreach (var box in allboxes.Data)
+            var allBoxes = await GetBoxBase(null, null, null, null, full, occupancy);
+            foreach (var box in allBoxes.Data)
             {
                 if (box.Attributes.Name.Contains(name))
                 {
@@ -62,32 +56,33 @@ namespace AlzaBox.API.Clients
         {
             var query = new Dictionary<string, string>()
             {
-                ["page[limit]"] = pageLimit.ToString(),
-                ["page[Offset]"] = pageOffset.ToString(),
+                ["fields[box]"] = "deliveryPin",
+                ["fields[box]"] = "name",
+                ["fields[box]"] = "address",
+                ["fields[box]"] = "gps",
+                ["fields[box]"] = "description",
+                ["fields[box]"] = "openingHours",                
+                ["fields[box]"] = "slots",
+                ["fields[box]"] = "countryShortCode"
             };
-
 
             if (packageDepth.HasValue)
             {
-                //boxRequest.AddParameter("filter[package][depth]", packageDepth.Value);
                 query.Add("filter[package][depth]", packageDepth.Value.ToString());
             }
 
             if (packageHeight.HasValue)
             {
-                //boxRequest.AddParameter("filter[package][height]", packageHeight.Value);
                 query.Add("filter[package][height]", packageHeight.Value.ToString());
             }
             
             if (packageWidth.HasValue)
             {
-                //boxRequest.AddParameter("filter[package][width]", packageWidth.Value);
                 query.Add("filter[package][width]", packageWidth.Value.ToString());
             }
             
             if ((boxId.HasValue) && (boxId > 0))
             {
-                //boxRequest.AddParameter("filter[id]", boxId.Value);
                 query.Add("filter[id]", boxId.Value.ToString());
             }
 
@@ -104,55 +99,7 @@ namespace AlzaBox.API.Clients
                 query.Add("fields[box]", "occupancy");
             }
 
-            var response = await _client.GetWithQueryStringAsync("box", query);
-            
-            if (response.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                throw new Exception()
-                {
-                    HResult = (int)response.StatusCode,
-                    Source = response.Content
-                };
-            } else if  (response.StatusCode == HttpStatusCode.NotFound)
-            {
-                var boxes = new BoxesResponse()
-                {
-                    Data = new List<Box>()
-                };
-                return boxes;
-            } else if (response.IsSuccessful)
-            {
-                var boxes = JsonSerializer.Deserialize<BoxesResponse>(response.Content);
-                return boxes;
-            }
-            else
-            {
-                throw new Exception()
-                {
-                    HResult = (int)response.StatusCode,
-                    Source = response.Content
-                };
-            }
-        }      
-        
-        private async Task<RestRequest> CreateBaseBoxRequest()
-        {
-            var boxRequest = new RestRequest();
-            boxRequest.Resource = "box";
-            boxRequest.AddHeader("Cache-Control", "no-cache");
-            boxRequest.AddHeader("Authorization", $"Bearer {this.accessToken}");
-            boxRequest.AlwaysMultipartFormData = false;
-
-            boxRequest.AddParameter("fields[box]", "deliveryPin");
-            boxRequest.AddParameter("fields[box]", "name");
-            boxRequest.AddParameter("fields[box]", "address");
-            boxRequest.AddParameter("fields[box]", "gps");
-            boxRequest.AddParameter("fields[box]", "description");
-            boxRequest.AddParameter("fields[box]", "openingHours");
-            boxRequest.AddParameter("fields[box]", "slots");
-            boxRequest.AddParameter("fields[box]", "countryShortCode");
-
-            return boxRequest;
-        }        
+            return await _httpClient.GetWithQueryStringAsync<BoxesResponse>("box", query);
+        }
     }
 }

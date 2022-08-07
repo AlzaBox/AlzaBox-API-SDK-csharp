@@ -1,8 +1,5 @@
-using System.Net;
 using System.Net.Http.Headers;
 using System.Text.Json;
-using RestSharp;
-using RestSharp.Serializers;
 using AlzaBox.API.Models;
 
 namespace AlzaBox.API.Clients;
@@ -25,13 +22,13 @@ public class AuthenticationClient
         body.Add(new KeyValuePair<string, string>("password", credentials.Password));
         body.Add(new KeyValuePair<string, string>("client_id", credentials.ClientId));
         body.Add(new KeyValuePair<string, string>("client_secret", credentials.ClientSecret));
-        
+
         body.Add(new KeyValuePair<string, string>("scope", Constants.ScopeKonzoleAccess));
         body.Add(new KeyValuePair<string, string>("grant_type", Constants.GrantTypePassword));
-        
+
         var httpContent = new FormUrlEncodedContent(body);
         httpContent.Headers.ContentType = new MediaTypeHeaderValue(Constants.ContentTypeFormUrlUncoded);
-        
+
         var res = await _httpClient.PostAsync("", httpContent);
 
         if (res.IsSuccessStatusCode)

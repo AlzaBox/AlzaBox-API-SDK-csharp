@@ -1,6 +1,5 @@
 using System.Net.Http.Headers;
 using AlzaBox.API.Models;
-using RestSharp;
 
 namespace AlzaBox.API.Clients;
 
@@ -44,8 +43,8 @@ public class AlzaBoxClient
             NoCache = true
         };
         
-        Boxes = new BoxClient(_restABClient, AccessToken);
-        Reservations = new ReservationClient(_restABClient, AccessToken);
+        Boxes = new BoxClient(_restABClient);
+        Reservations = new ReservationClient(_restABClient);
         
         return authenticationResponse;
     }
