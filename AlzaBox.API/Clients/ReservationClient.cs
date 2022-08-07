@@ -103,16 +103,16 @@ public class ReservationClient
         
         var response = await _httpClient.SendJsonAsync<ReservationResponse, ReservationRequest>(HttpMethod.Post, "reservation", reservationRequestBody);
         return response;
-    }
+    }   
 
-    public async Task<ReservationResponse> ExtendReservation(string reservationId, int hoursFromNow = 24)
+    public async Task<ReservationResponse> Extend(string reservationId, int hoursFromNow = 24)
     {
         var expirationDate = DateTime.Now.AddHours(hoursFromNow);
-        var reservationResponse = await ExtendReservation(reservationId, expirationDate);
+        var reservationResponse = await Extend(reservationId, expirationDate);
         return reservationResponse;
     }
 
-    public async Task<ReservationResponse> ExtendReservation(string reservationId, DateTime expirationDate)
+    public async Task<ReservationResponse> Extend(string reservationId, DateTime expirationDate)
     {
         var expirationDateUtcString = expirationDate.ToString("O");
         var reservationRequestBody = new ReservationRequest()
@@ -133,7 +133,7 @@ public class ReservationClient
         return await PatchReservation(reservationRequestBody);
     }
 
-    public async Task<ReservationResponse> CancelReservation(string reservationId)
+    public async Task<ReservationResponse> Cancel(string reservationId)
     {
         var reservationRequestBody = new ReservationRequest()
         {
