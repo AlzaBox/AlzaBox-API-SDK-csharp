@@ -52,7 +52,7 @@ public class ReservationClient
         return await _httpClient.GetWithQueryStringAsync<ReservationsResponse>("reservation", query);
     }
     
-    public async Task<ReservationsResponse> GetReservationStatus(string reservationId)
+    public async Task<ReservationsResponse> GetStatus(string reservationId)
     {
         return await GetBase(reservationId);
     }    

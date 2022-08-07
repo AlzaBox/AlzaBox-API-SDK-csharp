@@ -1,9 +1,8 @@
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Net.Http.Headers;
-using MediaTypeHeaderValue = System.Net.Http.Headers.MediaTypeHeaderValue;
+using System.Net.Http.Headers;
+
 
 namespace AlzaBox.API.Extensions;
 

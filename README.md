@@ -3,6 +3,10 @@
 - **Warning!** Use it for your own risk, now.
 - This project is licensed under the terms of the MIT license.
 
+### The Process
+
+![This is an AlzaBox API SDK process diagram](https://ab.urbidata.cz/images/sdk/AlzaBoxSDKProcess5.jpeg)
+
 ### AlzaBoxClient 
 - has contructor with parameters to set test or production environment.
 - has login method to authenticate by your credentials
@@ -16,7 +20,8 @@
 - Reservetion.Reserve
 - Reservation.Extend
 - Reservation.Cancel
-
+- Reservation.Lock
+- Reservation.Unlock
 
 # Credentials
 If you don't have any credentials for connecting to AlzaBox API, please contact our business key account at ...
