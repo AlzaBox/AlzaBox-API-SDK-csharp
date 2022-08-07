@@ -1,22 +1,14 @@
-using System.Net;
-using System.Text.Json;
+using AlzaBox.API.Extensions;
 using AlzaBox.API.Models;
-using RestSharp;
 
 namespace AlzaBox.API.Clients;
 
 public class ReservationClient
 {
-    private readonly RestClient _client;
-    private readonly string _accessToken;
-
-    public ReservationClient(RestClient client, string? accessToken = null)
-    {
-        _client = client;
-        _accessToken = accessToken;
-    }
-
-
+    private readonly HttpClient _httpClient;
+    
+    public ReservationClient(HttpClient httpClient) => _httpClient = httpClient;
+    
     public async Task<AlzaBox.API.Models.Reservation> Get(string reservationId)
     {
         var response = await GetBase(reservationId);
@@ -30,65 +22,40 @@ public class ReservationClient
         }
     }
 
-    public async Task<AlzaBox.API.Models.ReservationsResponse> GetAll(int pageLimit = 10, int pageOffset = 0, string status = "")
+    public async Task<AlzaBox.API.Models.ReservationsResponse> GetAll(int pageLimit = 10, int pageOffset = 0,
+        string status = "")
     {
         var response = await GetBase("", pageLimit, pageOffset, status);
         return response;
     }
 
-    private async Task<AlzaBox.API.Models.ReservationsResponse> GetBase(string reservationId = "", int pageLimit = 10, int pageOffset = 0,
+    private async Task<AlzaBox.API.Models.ReservationsResponse> GetBase(string reservationId = "", int pageLimit = 10,
+        int pageOffset = 0,
         string status = "")
     {
-        var reservationRequest = new RestRequest();
-        reservationRequest.Resource = "reservation";
-        reservationRequest.AddHeader("Cache-Control", "no-cache");
-        reservationRequest.AddHeader("Authorization", $"Bearer {_accessToken}");
-        reservationRequest.AlwaysMultipartFormData = false;
-        reservationRequest.AddParameter("page[limit]", pageLimit);
-        reservationRequest.AddParameter("page[Offset]", pageOffset);
+        var query = new Dictionary<string, string>()
+        {
+            ["page[limit]"] = pageLimit.ToString(),
+            ["page[Offset]"] = pageOffset.ToString(),
+        };
+        
         if (!string.IsNullOrWhiteSpace(reservationId))
         {
-            reservationRequest.AddParameter("filter[Id]", reservationId);
+            query.Add("filter[Id]", reservationId);
         }
 
         if (!string.IsNullOrWhiteSpace(status))
         {
-            reservationRequest.AddParameter("filter[Status]", status);
-        }
-
-        var response = await _client.ExecuteAsync(reservationRequest, Method.Get);
-        
-        if (response.StatusCode == HttpStatusCode.Unauthorized)
-        {
-            throw new Exception()
-            {
-                HResult = (int)response.StatusCode,
-                Source = response.Content
-            };                
-        }        
-
-        if (response.StatusCode == HttpStatusCode.NotFound)
-        {
-            var reservations = new ReservationsResponse();
-            return reservations;
+            query.Add("filter[Status]", status);
         }
         
-        if (response.IsSuccessful)
-        {
-            var reservations = JsonSerializer.Deserialize<ReservationsResponse>(response.Content);
-            return reservations;
-        }
-        else
-        {
-            var ex = new Exception()
-            {
-                Source = response.Content,
-                HResult = (int)response.StatusCode
-            };
-
-            throw ex;
-        }
+        return await _httpClient.GetWithQueryStringAsync<ReservationsResponse>("reservation", query);
     }
+    
+    public async Task<ReservationsResponse> GetReservationStatus(string reservationId)
+    {
+        return await GetBase(reservationId);
+    }    
 
     public async Task<ReservationResponse> Reserve(string id, int boxId, string packageNumber, int hoursFromNow)
     {
@@ -133,56 +100,10 @@ public class ReservationClient
                 }
             }
         };
-
-        var reservationRequest = new RestRequest();
-        reservationRequest.Resource = "reservation";
-        reservationRequest.AddHeader("Cache-Control", "no-cache");
-        reservationRequest.AddHeader("Authorization", $"Bearer {_accessToken}");
-        reservationRequest.AlwaysMultipartFormData = false;
-        reservationRequest.AddJsonBody(reservationRequestBody);
-
-        var response = await _client.ExecuteAsync(reservationRequest, Method.Post);
-
-        if (response.IsSuccessful)
-        {
-            var reservation = JsonSerializer.Deserialize<ReservationResponse>(response.Content);
-            return reservation;
-        }
-        else
-        {
-            var reservation = new ReservationResponse()
-            {
-                Data = null,
-                Errors = response.ErrorMessage,
-                Metadata = response.Content
-            };
-
-            return reservation;
-        }
-    }
-
-    public async Task<ReservationsResponse> GetStatus(string reservationId)
-    {
-        var reservationRequest = new RestRequest();
-        reservationRequest.Resource = "reservation";
-        reservationRequest.AddHeader("Cache-Control", "no-cache");
-        reservationRequest.AddHeader("Authorization", $"Bearer {_accessToken}");
-        reservationRequest.AlwaysMultipartFormData = false;
-        reservationRequest.AddParameter("page[limit]", 1);
-        reservationRequest.AddParameter("filter[id]", reservationId);
-
-        var response = await _client.ExecuteAsync(reservationRequest, Method.Get);
-
-        if (response.IsSuccessful)
-        {
-            var reservations = JsonSerializer.Deserialize<ReservationsResponse>(response.Content);
-            return reservations;
-        }
-        else
-        {
-            return null;
-        }
-    }
+        
+        var response = await _httpClient.SendJsonAsync<ReservationResponse, ReservationRequest>(HttpMethod.Post, "reservation", reservationRequestBody);
+        return response;
+    }   
 
     public async Task<ReservationResponse> Extend(string reservationId, int hoursFromNow = 24)
     {
@@ -209,31 +130,7 @@ public class ReservationClient
             }
         };
 
-        var reservationRequest = new RestRequest();
-        reservationRequest.Resource = "reservation";
-        reservationRequest.AddHeader("Cache-Control", "no-cache");
-        reservationRequest.AddHeader("Authorization", $"Bearer {_accessToken}");
-        reservationRequest.AlwaysMultipartFormData = false;
-        reservationRequest.AddJsonBody(reservationRequestBody);
-
-        var response = await _client.ExecuteAsync(reservationRequest, Method.Patch);
-        ReservationResponse reservationResponse;
-        if (response.IsSuccessful)
-        {
-            reservationResponse = JsonSerializer.Deserialize<ReservationResponse>(response.Content);
-            return reservationResponse;
-        }
-        else
-        {
-            reservationResponse = new ReservationResponse()
-            {
-                Data = null,
-                Errors = response.ErrorMessage,
-                Metadata = response.Content
-            };
-        }
-
-        return reservationResponse;
+        return await PatchReservation(reservationRequestBody);
     }
 
     public async Task<ReservationResponse> Cancel(string reservationId)
@@ -253,29 +150,11 @@ public class ReservationClient
             }
         };
 
-        var reservationRequest = new RestRequest();
-        reservationRequest.Resource = "reservation";
-        reservationRequest.AddHeader("Cache-Control", "no-cache");
-        reservationRequest.AddHeader("Authorization", $"Bearer {_accessToken}");
-        reservationRequest.AlwaysMultipartFormData = false;
-        reservationRequest.AddJsonBody(reservationRequestBody);
+        return await PatchReservation(reservationRequestBody);
+    }
 
-        var response = await _client.ExecuteAsync(reservationRequest, Method.Patch);
-        if (response.IsSuccessful)
-        {
-            var reservationResponse = JsonSerializer.Deserialize<ReservationResponse>(response.Content);
-            return reservationResponse;
-        }
-        else
-        {
-            var reservationResponse = new ReservationResponse()
-            {
-                Data = null,
-                Errors = response.ErrorMessage,
-                Metadata = response.Content
-            };
-
-            return reservationResponse;
-        }
+    private async Task<ReservationResponse> PatchReservation(ReservationRequest reservationRequest)
+    {
+        return await _httpClient.SendJsonAsync<ReservationResponse, ReservationRequest>(HttpMethod.Patch, "reservation", reservationRequest);        
     }
 }
