@@ -3,7 +3,8 @@
 - **Warning!** Use it for your own risk, now.
 - This project is licensed under the terms of the MIT license.
 
-### The Process
+### How to be happy 
+The happy path scenario is marked with a white background. In this case, you just need to use the **Reserve** method and learn to receive callbacks.
 
 ![This is an AlzaBox API SDK process diagram](https://ab.urbidata.cz/images/sdk/AlzaBoxSDKProcess5.jpeg)
 
@@ -42,6 +43,6 @@ var response5 = await alzaBoxClient.Reservations.Cancel(id);
 
 # Next steps
 - Completing the models property description
-- Getting rid of RestSharp library dependency
-- Nuget packages
+- DTO for Callbacks
+- Nuget package
 
