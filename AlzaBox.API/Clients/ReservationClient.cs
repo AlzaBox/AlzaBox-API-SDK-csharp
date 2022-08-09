@@ -152,6 +152,47 @@ public class ReservationClient
 
         return await PatchReservation(reservationRequestBody);
     }
+    
+    
+    public async Task<ReservationResponse> Lock(string reservationId)
+    {
+        var reservationRequestBody = new ReservationRequest()
+        {
+            Data = new ReservationRequestData()
+            {
+                Reservation = new Reservation()
+                {
+                    Id = reservationId,
+                    Attributes = new ReservationRequestAttributes()
+                    {
+                        Status = "STOCKED_LOCKED"
+                    },
+                }
+            }
+        };
+
+        return await PatchReservation(reservationRequestBody);
+    }
+    
+    public async Task<ReservationResponse> Unlock(string reservationId)
+    {
+        var reservationRequestBody = new ReservationRequest()
+        {
+            Data = new ReservationRequestData()
+            {
+                Reservation = new Reservation()
+                {
+                    Id = reservationId,
+                    Attributes = new ReservationRequestAttributes()
+                    {
+                        Status = "STOCKED"
+                    },
+                }
+            }
+        };
+
+        return await PatchReservation(reservationRequestBody);
+    }    
 
     private async Task<ReservationResponse> PatchReservation(ReservationRequest reservationRequest)
     {

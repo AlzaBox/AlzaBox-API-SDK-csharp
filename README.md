@@ -38,7 +38,9 @@ var response1 = await alzaBoxClient.Boxes.GetAll();
 var response2 = await alzaBoxClient.Reservations.Reserve(id, response1.Data[0].Id, $"PKG{Guid.NewGuid()}", 24);
 var response3 = await alzaBoxClient.Reservations.GetStatus(id);
 var response4 = await alzaBoxClient.Reservations.Extend(id, 48);
-var response5 = await alzaBoxClient.Reservations.Cancel(id);
+var response5 = await alzaBoxClient.Reservations.Lock(id);
+var response6 = await alzaBoxClient.Reservations.Unlock(id);
+var response7 = await alzaBoxClient.Reservations.Cancel(id);
 ```
 
 # Next steps
