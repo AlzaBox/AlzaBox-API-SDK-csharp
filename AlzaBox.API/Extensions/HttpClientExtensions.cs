@@ -1,24 +1,25 @@
 using System.Text;
 using System.Text.Json;
-using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.AspNetCore.Http;
 using System.Net.Http.Headers;
-
 
 namespace AlzaBox.API.Extensions;
 
 public static class HttpClientExtensions
 {
-    public static async Task<HttpResponseMessage> GetWithQueryStringAsync(this HttpClient httpClient, string uri, 
-        Dictionary<string, string> queryStringParams)
+    public static async Task<HttpResponseMessage> GetWithQueryStringAsync(this HttpClient httpClient, string relativeUri, 
+        QueryString queryString)
     {
-        var url = QueryHelpers.AddQueryString(uri, queryStringParams);
-        return await httpClient.GetAsync(url);
+        var uri = new Uri(httpClient.BaseAddress, relativeUri);
+        var uriBuilder = new UriBuilder(uri);
+        uriBuilder.Query = queryString.ToUriComponent();
+        return await httpClient.GetAsync(uriBuilder.Uri);
     }
-
-    public static async Task<T> GetWithQueryStringAsync<T>(this HttpClient httpClient, string uri,
-        Dictionary<string, string> queryStringParams)
+    
+    public static async Task<T> GetWithQueryStringAsync<T>(this HttpClient httpClient, string relativeUri,
+        QueryString queryString)
     {
-        var response = await httpClient.GetWithQueryStringAsync(uri, queryStringParams);
+        var response = await httpClient.GetWithQueryStringAsync(relativeUri, queryString);
         if (response.IsSuccessStatusCode)
         {
             var content = await response.Content.ReadAsStringAsync();

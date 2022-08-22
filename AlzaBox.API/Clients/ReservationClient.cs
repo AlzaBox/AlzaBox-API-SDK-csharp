@@ -1,5 +1,6 @@
 using AlzaBox.API.Extensions;
 using AlzaBox.API.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace AlzaBox.API.Clients;
 
@@ -33,23 +34,22 @@ public class ReservationClient
         int pageOffset = 0,
         string status = "")
     {
-        var query = new Dictionary<string, string>()
-        {
-            ["page[limit]"] = pageLimit.ToString(),
-            ["page[Offset]"] = pageOffset.ToString(),
-        };
+        var queryString = new QueryString();
+        queryString = queryString.Add("page[limit]", pageLimit.ToString());
+        queryString = queryString.Add("page[offset]", pageOffset.ToString());
+        
         
         if (!string.IsNullOrWhiteSpace(reservationId))
         {
-            query.Add("filter[Id]", reservationId);
+            queryString = queryString.Add("filter[Id]", reservationId);
         }
 
         if (!string.IsNullOrWhiteSpace(status))
         {
-            query.Add("filter[Status]", status);
+            queryString = queryString.Add("filter[Status]", status);
         }
         
-        return await _httpClient.GetWithQueryStringAsync<ReservationsResponse>("reservation", query);
+        return await _httpClient.GetWithQueryStringAsync<ReservationsResponse>("reservation", queryString);
     }
     
     public async Task<ReservationsResponse> GetStatus(string reservationId)

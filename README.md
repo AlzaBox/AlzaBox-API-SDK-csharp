@@ -6,7 +6,7 @@
 ### How to be happy 
 The happy path scenario is marked with a white background. In this case, you just need to use the **Reserve** method and learn to receive callbacks.
 
-![This is an AlzaBox API SDK process diagram](https://ab.urbidata.cz/images/sdk/AlzaBoxSDKProcess5.jpeg)
+![This is an AlzaBox API SDK process diagram](AlzaBox_API_reservation_process.jpg)
 
 ### AlzaBoxClient 
 - has contructor with parameters to set test or production environment.

@@ -10,7 +10,7 @@ public class AlzaBoxClient
     private readonly HttpClient _restABClient;
     private readonly AuthenticationClient _authenticationClient;
 
-    private string AccessToken { get; set; }
+    public string AccessToken { get; set; }
     public BoxClient Boxes { get; set; }
     public ReservationClient Reservations { get; set; }
     
@@ -20,6 +20,15 @@ public class AlzaBoxClient
         _authenticationClient = new AuthenticationClient(abIdmUrl);
         _restABClient = new HttpClient();
         _restABClient.BaseAddress = new Uri(abConnectorUrl);
+        _restABClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        _restABClient.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue()
+        {
+            NoCache = true
+        };
+        
+        Boxes = new BoxClient(_restABClient);
+        Reservations = new ReservationClient(_restABClient);
+        
     }
 
     public async Task<AuthenticationResponse> Login(string username, string password, string clientId,
@@ -35,17 +44,14 @@ public class AlzaBoxClient
         
         var authenticationResponse = await _authenticationClient.Authenticate(credentials);
         AccessToken = authenticationResponse.AccessToken;
-        
-        _restABClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         _restABClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AccessToken);
-        _restABClient.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue()
-        {
-            NoCache = true
-        };
-        
-        Boxes = new BoxClient(_restABClient);
-        Reservations = new ReservationClient(_restABClient);
         
         return authenticationResponse;
+    }
+
+    public async void ExternalLogin(string accessToken)
+    {
+        AccessToken = accessToken;
+        _restABClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AccessToken);        
     }
 }

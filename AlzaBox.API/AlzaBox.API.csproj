@@ -1,18 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
+        <PackageId>Alzabox.API.SDK</PackageId> 
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <Title>AlzaBox API SDK</Title>
         <Description>Easier use of AlzaBox API</Description>
-        <Copyright>Alza.cz, a.s.</Copyright>
-        <PackageProjectUrl>alzabox.co</PackageProjectUrl>
-        <PackageTags>alzabox api</PackageTags>
+        <Company>Alza a.s.</Company> 
+        <Copyright>Alza.cz a.s.</Copyright>
+        <PackageProjectUrl>alzabox.co</PackageProjectUrl> 	    
+        <Version>0.0.5</Version> 
+  	    <Authors>Martin Matousek</Authors>   	    
+  	    <PackageTags>Alzabox, Alza, Lockers</PackageTags> 
+  	    <Description>This package will help with AlzaBox API</Description>
+	    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	    <PackageReadmeFile>README.MD</PackageReadmeFile>
     </PropertyGroup>
-
     <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+        <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
+        <None Include="..\README.MD" Pack="true" PackagePath="\" />
     </ItemGroup>
-
 </Project>

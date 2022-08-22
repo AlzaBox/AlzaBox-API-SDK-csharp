@@ -1,5 +1,6 @@
 using AlzaBox.API.Extensions;
 using AlzaBox.API.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace AlzaBox.API.Clients
 {
@@ -54,49 +55,47 @@ namespace AlzaBox.API.Clients
         private async Task<BoxesResponse> GetBoxBase(int? boxId = null, double? packageWidth = null,
             double? packageHeight = null, double? packageDepth = null, bool full = false, bool occupancy = false)
         {
-            var query = new Dictionary<string, string>()
-            {
-                ["fields[box]"] = "deliveryPin",
-                ["fields[box]"] = "name",
-                ["fields[box]"] = "address",
-                ["fields[box]"] = "gps",
-                ["fields[box]"] = "description",
-                ["fields[box]"] = "openingHours",                
-                ["fields[box]"] = "slots",
-                ["fields[box]"] = "countryShortCode"
-            };
+            var query = new QueryString();
+            query = query.Add("fields[box]", "deliveryPin");
+            query = query.Add("fields[box]", "name");
+            query = query.Add("fields[box]", "address");
+            query = query.Add("fields[box]", "gps");
+            query = query.Add("fields[box]", "description");
+            query = query.Add("fields[box]", "openingHours");
+            query = query.Add("fields[box]", "slots");
+            query = query.Add("fields[box]", "countryShortCode");
 
             if (packageDepth.HasValue)
             {
-                query.Add("filter[package][depth]", packageDepth.Value.ToString());
+                query = query.Add("filter[package][depth]", packageDepth.Value.ToString());
             }
 
             if (packageHeight.HasValue)
             {
-                query.Add("filter[package][height]", packageHeight.Value.ToString());
+                query = query.Add("filter[package][height]", packageHeight.Value.ToString());
             }
             
             if (packageWidth.HasValue)
             {
-                query.Add("filter[package][width]", packageWidth.Value.ToString());
+                query = query.Add("filter[package][width]", packageWidth.Value.ToString());
             }
             
             if ((boxId.HasValue) && (boxId > 0))
             {
-                query.Add("filter[id]", boxId.Value.ToString());
+                query = query.Add("filter[id]", boxId.Value.ToString());
             }
 
             if ((boxId > 0) && full)
             {
-                query.Add("fields[box]", "fittingPackages");
-                query.Add("fields[box]", "unavaiableReason");
-                query.Add("fields[box]", "tooLargePackages");
-                query.Add("fields[box]", "requiredSlots");
+                query = query.Add("field[box]", "fittingPackages");
+                query = query.Add("field[box]", "unavailableReason");
+                query = query.Add("field[box]", "tooLargePackages");
+                query = query.Add("field[box]", "requiredSlots");
             }
 
             if (occupancy)
             {
-                query.Add("fields[box]", "occupancy");
+                query = query.Add("filter[box]", "occupancy");
             }
 
             return await _httpClient.GetWithQueryStringAsync<BoxesResponse>("box", query);
