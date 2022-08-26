@@ -1,0 +1,45 @@
+@page
+@model AlzaBox.API.WebExample.Pages.Boxes
+
+@{
+    ViewData["Title"] = $"List of AlzaBoxes";
+}
+
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <caption>List of boxes</caption>
+        <thead>
+        <form method="Post">
+            <tr>
+                <td>
+                    <input type="text" class="form-control" asp-for="BoxSearch.Id">
+                </td>
+                <td>
+                    <input type="text" class="form-control" asp-for="BoxSearch.Name">
+                </td>
+                <td>
+                    <button type="submit" asp-page="Boxes" asp-page-handler="search" class="btn btn-primary">Search</button>
+                    <button type="submit" asp-page="Boxes" asp-page-handler="Export" class="btn btn-primary">Export</button>
+                </td>
+            </tr>
+        </form>
+        <tr>
+            <td>Id</td>
+            <td>Name</td>
+            <td>City</td>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.BoxesData)
+        {
+            <tr>
+                <td>
+                    <a asp-page="box" asp-route-id="@item.Id">@item.Id</a>
+                </td>
+                <td>@item.Attributes.Name</td>
+                <td>@item.Attributes.Adress?.City</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

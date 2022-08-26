@@ -87,15 +87,15 @@ namespace AlzaBox.API.Clients
 
             if ((boxId > 0) && full)
             {
-                query = query.Add("field[box]", "fittingPackages");
-                query = query.Add("field[box]", "unavailableReason");
-                query = query.Add("field[box]", "tooLargePackages");
-                query = query.Add("field[box]", "requiredSlots");
+                query = query.Add("fields[box]", "fittingPackages");
+                query = query.Add("fields[box]", "unavailableReason");
+                query = query.Add("fields[box]", "tooLargePackages");
+                query = query.Add("fields[box]", "requiredSlots");
             }
 
             if (occupancy)
             {
-                query = query.Add("filter[box]", "occupancy");
+                query = query.Add("fields[box]", "occupancy");
             }
 
             return await _httpClient.GetWithQueryStringAsync<BoxesResponse>("box", query);

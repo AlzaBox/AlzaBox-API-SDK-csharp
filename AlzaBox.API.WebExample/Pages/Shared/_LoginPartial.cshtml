@@ -1,0 +1,21 @@
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Identity
+
+@inject ABAPIService AbApiService
+
+<ul class="navbar-nav">
+    @if (AbApiService.IsSignedIn())
+    {
+        <li class="nav-item">
+            <form class="form-inline" asp-page-handler="Logout" asp-page="/Login" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+                <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-page="/Login">Login</a>
+        </li>
+    }
+</ul>

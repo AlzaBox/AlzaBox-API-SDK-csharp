@@ -1,0 +1,27 @@
+@page
+@model AlzaBox.API.WebExample.Pages.Label
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" href="~/css/label.css"/>
+</head>
+<body>
+<div>
+    PUT THIS PACKAGE TO THE ALZABOX<br/>
+    @if (Model.Entity.PackageNumber?.Length > 0)
+    {
+        <barcode content="@Model.Entity.PackageNumber" alt="barcode"/><br/>
+    }
+    Scan this barcode to open slot.<br/>
+    PackageNumber: @Model.Entity.Id<br/>
+    @Model.BoxData.Attributes.Name<br/>
+</div>
+</body>
+</html>

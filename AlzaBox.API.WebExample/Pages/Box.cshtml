@@ -1,0 +1,243 @@
+@page "{id}"
+@model AlzaBox.API.WebExample.Pages.Box
+
+@{
+    ViewData["Title"] = $"AlzaBox {Model.BoxData.Id} {Model.BoxData.Attributes.Name}";
+}
+
+<div class="pricing-header p-3 pb-md-4 mx-auto text-center">
+
+    <p>@Model.BoxData.Attributes.Adress.StreetWithNumber @Model.BoxData.Attributes.Adress.Zip @Model.BoxData.Attributes.Adress.City</p>
+    <p>@Model.BoxData.Attributes.Description</p>
+
+
+    <div class="form-group">
+        <a asp-page="box" asp-route-boxid="@Model.BoxData.Id" asp-page-handler="WithOccupancy" class="btn btn-primary">Get occupancy</a>
+        <a asp-page="reservation" asp-route-boxid="@Model.BoxData.Id" asp-page-handler="CreateReservation" class="btn btn-primary">Create reservation</a>
+        <a asp-page="boxes" class="btn btn-secondary">Back</a>
+    </div>
+
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 mb-3">
+    <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm">
+            <div class="card-header py-3">
+                <h4 class="my-0 fw-normal">Openning hours</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>
+                            Day
+                        </th>
+                        <th>
+                            Open
+                        </th>
+                        <th>
+                            Close
+                        </th>
+                    </tr>
+                    </thead>
+                    @foreach (var boxOpeningHour in @Model.BoxData.Attributes.OpeningHours)
+                    {
+                        <tr>
+                            <td>@boxOpeningHour.Day</td>
+                            <td>@boxOpeningHour.Open</td>
+                            <td>@boxOpeningHour.Close</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm">
+            <div class="card-header py-3">
+                <h4 class="my-0 fw-normal">Attributes</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped table-responsive">
+                    <tr>
+                        <td>Delivery Pin</td>
+                        <td>@Model.BoxData.Attributes.DeliveryPin</td>
+                    </tr>
+                    <tr>
+                        <td>Gps Lat</td>
+                        <td id="lat">@Model.BoxData.Attributes.Gps.Lat</td>
+                    </tr>
+                    <tr>
+                        <td>Gps Lng</td>
+                        <td id="lng">@Model.BoxData.Attributes.Gps.Lng</td>
+                    </tr>
+                    <tr>
+                        <td>Occupancy</td>
+                        <td>@Model.Occupancy</td>
+                    </tr>
+                    <tr>
+                        <td>Unavaiable Reason</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm">
+            <div class="card-header py-3">
+                <h4 class="my-0 fw-normal">Packages</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" class="row g-3">
+                    <input asp-for="BoxId" hidden="hidden"/>
+
+                    <div class="form-group">
+                        <label asp-for="PackageSize.Width" class="form-label"></label>
+                        <input asp-for="PackageSize.Width" class="form-control"/>
+                        <span asp-validation-for="PackageSize.Width" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PackageSize.Height" class="form-label"></label>
+                        <input asp-for="PackageSize.Height" class="form-control"/>
+                        <span asp-validation-for="PackageSize.Height" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PackageSize.Depth" class="form-label"></label>
+                        <input asp-for="PackageSize.Depth" class="form-control"/>
+                        <span asp-validation-for="PackageSize.Depth" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" asp-page="Box" asp-page-handler="Package" class="btn btn-primary">Is package fit?</button>
+                </form>
+
+                <h5 visible="(@Model.BoxData.Attributes.FittingPackages != null)" style="padding-top: 15px">Fitting packages</h5>
+                <table visible="(@Model.BoxData.Attributes.FittingPackages != null)" class="table table-striped table-responsive">
+                    @foreach (var item in @Model.BoxData.Attributes.FittingPackages)
+                    {
+                        <tr>
+                            <td>@item.Width</td>
+                            <td>@item.Height</td>
+                            <td>@item.Depth</td>
+                        </tr>
+                    }
+                </table>
+                <h5 visible="(@Model.BoxData.Attributes.TooLargePackages?.Count > 0)">Too large packages</h5>
+                <table visible="(@Model.BoxData.Attributes.TooLargePackages != null)" class="table table-striped table-responsive">
+                    @foreach (var item in @Model.BoxData.Attributes.TooLargePackages)
+                    {
+                        <tr>
+                            <td>@item.Width</td>
+                            <td>@item.Height</td>
+                            <td>@item.Depth</td>
+                        </tr>
+                    }
+                </table>
+                @if (@Model.BoxData.Attributes.RequiredSlots != null)
+                {
+                    <h5>Required slots</h5>
+                    <ol>
+                        @foreach (var item in @Model.BoxData.Attributes.RequiredSlots)
+                        {
+                            <li>
+                                Count: @item.Count, &nbsp;
+                                Type: @item.Type, &nbsp;
+                                AvaiableCount: @item.AvailableCount, &nbsp;
+                                MaxCount: @item.MaxCount, &nbsp;
+                                TotalCount: @item.TotalCount, &nbsp;
+                            </li>
+                        }
+                    </ol>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm">
+            <div class="card-header py-3 text-bg-primary">
+                <h4 class="my-0 fw-normal">Slots</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>
+                            Count
+                        </th>
+                        <th>
+                            Depth
+                        </th>
+                        <th>
+                            Height
+                        </th>
+                        <th>
+                            Width
+                        </th>
+                        <th>
+                            Type
+                        </th>
+                        <th>
+                            Id
+                        </th>
+                    </tr>
+                    </thead>
+                    @foreach (var boxSlot in @Model.BoxData.Attributes.Slots)
+                    {
+                        <tr>
+                            <td>@boxSlot.Count</td>
+                            <td>@boxSlot.Depth</td>
+                            <td>@boxSlot.Height</td>
+                            <td>@boxSlot.Width</td>
+                            <td>@boxSlot.Type</td>
+                            <td>@boxSlot.SlotId</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card rounded-3 shadow-sm">
+            <div class="card-header py-3 text-bg-primary">
+                <h4 class="my-0 fw-normal">Map</h4>
+            </div>
+            <div class="card-body">
+                <div id="map">Map</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+    <style>
+          html, body {
+            height: 100%;
+            padding: 0;
+            margin: 0;
+          }
+          #map {
+            /* configure the size of the map */
+            width: 100%;
+            height: 500px;
+          }
+    </style>
+}
+
+@section Scripts {
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+      let lng = $('#lng').html();
+      let lat = $('#lat').html();
+                                   
+      var map = L.map('map').setView({lon: lng, lat: lat}, 12);
+      
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+      }).addTo(map);
+
+      L.control.scale({imperial: true, metric: true}).addTo(map);
+      L.marker({lon: lng, lat: lat}).addTo(map);
+    </script>
+}

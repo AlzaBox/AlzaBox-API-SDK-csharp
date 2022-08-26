@@ -1,0 +1,17 @@
+@{
+    string? text = (string?)TempData["FlashMessage.Text"];
+    string? cssClass = null;
+    if (!string.IsNullOrWhiteSpace(text))
+    {
+        FlashMessageType? type = (FlashMessageType)TempData["FlashMessage.Type"];
+        cssClass = "alert-"+type.ToString().ToLower();
+    }
+}
+@if (!string.IsNullOrWhiteSpace(text))
+{
+    <div class="alert @cssClass" role="alert">
+        <p style="margin-bottom: 0px">
+            @text
+        </p>
+    </div>
+}

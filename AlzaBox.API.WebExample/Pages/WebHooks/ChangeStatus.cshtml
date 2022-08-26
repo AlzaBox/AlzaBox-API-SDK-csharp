@@ -1,0 +1,28 @@
+@page
+@model AlzaBox.API.WebExample.Pages.WebHooks.ChangeStatus
+
+<table class="table table-responsive table-striped">
+    <thead>
+    <tr>
+        <th>
+            TimeStamp
+        </th>
+        <th>
+            Callback Payload
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.ChangeStatusRequests)
+    {
+        <tr>
+            <td>
+                @item.CreatedAt.ToString("O")
+            </td>
+            <td>
+                @item.RequestBody
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

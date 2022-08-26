@@ -1,0 +1,69 @@
+@page "{id?}"
+@model AlzaBox.API.WebExample.Pages.Reservation
+
+@{
+    ViewData["Title"] = $"Reservation to AlzaBox: {Model.BoxData.Id}, {Model.BoxData.Attributes.Name}";
+}
+
+@if (Model.Entity.PackageNumber?.Length > 0)
+{
+    <barcode content="@Model.Entity.PackageNumber" alt="barcode"/>
+}
+
+<form method="post" class="row g-3">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="Entity.Id" class="form-label"></label>
+        <input asp-for="Entity.Id" class="form-control"/>
+        <span asp-validation-for="Entity.Id" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Entity.BoxId" class="form-label"></label>
+        <input asp-for="Entity.BoxId" class="form-control"/>
+        <span asp-validation-for="Entity.BoxId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Entity.PackageNumber" class="form-label"></label>
+        <input asp-for="Entity.PackageNumber" class="form-control"/>
+        <span asp-validation-for="Entity.PackageNumber" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Entity.ExpirationDate" class="form-label"></label>
+        <input asp-for="Entity.ExpirationDate" class="form-control"/>
+        <span asp-validation-for="Entity.ExpirationDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Entity.Width" class="form-label"></label>
+        <input asp-for="Entity.Width" class="form-control"/>
+        <span asp-validation-for="Entity.Width" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Entity.Height" class="form-label"></label>
+        <input asp-for="Entity.Height" class="form-control"/>
+        <span asp-validation-for="Entity.Height" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Entity.Depth" class="form-label"></label>
+        <input asp-for="Entity.Depth" class="form-control"/>
+        <span asp-validation-for="Entity.Depth" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        @if (Model.Action == "Extend")
+        {
+            <input type="submit" asp-page-handler="Extend" value="Extend" class="btn btn-primary"/>
+        }
+        else
+        {
+            if (Model.Action == "Create")
+            {
+                <input type="submit" value="Reserve" class="btn btn-primary"/>
+            }
+        }
+
+        <a asp-page="/Reservations" class="btn btn-link">Reservations</a>
+        <a asp-page="/Label" asp-route-id="@Model.Entity.Id" class="btn btn-link">C&C Label</a>
+        <a asp-page="/Index" class="btn btn-link">Home</a>
+    </div>
+</form>

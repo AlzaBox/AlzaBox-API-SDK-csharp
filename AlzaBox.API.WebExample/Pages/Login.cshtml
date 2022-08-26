@@ -1,0 +1,48 @@
+@page
+@model AlzaBox.API.WebExample.Pages.Login
+
+@{
+    ViewData["Title"] = $"Login";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-4">
+
+            <div class="card">
+                <div class="card-body">
+
+                    <form method="post" class="row g-3">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="form-group">
+                            <label asp-for="Credentials.UserName" class="form-label"></label>
+                            <input asp-for="Credentials.UserName" class="form-control"/>
+                            <span asp-validation-for="Credentials.UserName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Credentials.Password" class="form-label"></label>
+                            <input asp-for="Credentials.Password" class="form-control"/>
+                            <span asp-validation-for="Credentials.Password" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Credentials.ClientId" class="form-label"></label>
+                            <input asp-for="Credentials.ClientId" class="form-control"/>
+                            <span asp-validation-for="Credentials.ClientId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Credentials.ClientSecret" class="form-label"></label>
+                            <input asp-for="Credentials.ClientSecret" class="form-control"/>
+                            <span asp-validation-for="Credentials.ClientSecret" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="submit" value="Login" class="btn btn-primary"/>
+                            <a asp-page="/Index" class="btn btn-link">Home</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,55 @@
+@page
+@model AlzaBox.API.WebExample.Pages.Reservations
+
+@{
+    ViewData["Title"] = $"List of reservations";
+}
+
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <caption>List of reservations</caption>
+        <thead>
+         <form method="Post">
+         <tr>
+             <td> <input type="text" class="form-control" asp-for="ReservationSearch.Id"></td>
+             <td>
+                 <select asp-for="ReservationSearch.Status" class="form-control form-select" asp-items="@Model.StatusesSelectList">
+                     <option value="">--- Status filter ---</option>
+                 </select>
+             </td>
+             <td></td>
+             <td></td>
+             <td></td>
+             <td><button type="submit" asp-page="Reservations" asp-page-handler="search" class="btn btn-primary">Search</button></td>
+         </tr>
+         </form>
+
+        <tr>
+            <td>Id</td>
+            <td>Status</td>
+            <td>Type</td>
+            <td>ExpirationDate</td>
+            <td>BoxId</td>
+            <td>Actions</td>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.ReservationsData)
+        {
+            <tr>
+                <td>
+                    <a asp-page="reservation" asp-route-id="@item.Id">@item.Id</a>
+                </td>
+                <td>@item.Attributes.Status</td>
+                <td>@item.Attributes.Type</td>
+                <td>@item.Attributes.ExpirationDate</td>
+                <td>@item.Relationships.Box.Id</td>
+                <td>
+                    <a asp-page="reservation" asp-route-id="@item.Id" asp-page-handler="cancel">Cancel</a>
+                    <a asp-page="reservation" asp-route-id="@item.Id" asp-page-handler="extend">Extend</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
