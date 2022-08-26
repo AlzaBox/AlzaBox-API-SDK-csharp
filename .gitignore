@@ -322,10 +322,7 @@ ASALocalRun/
 
 # MSBuild Binary and Structured Log
 *.binlog
-appsettings.json
 appsettings.Development.json
 appsettings.Local.json
-SEPCore/wwwroot/lib/
-revolt*.bak
 .vscode/tasks.json
 .vscode/launch.json

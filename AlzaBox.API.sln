@@ -4,8 +4,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlzaBox.API.CliExample", "A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlzaBox.API", "AlzaBox.API\AlzaBox.API.csproj", "{F3D6FBA1-4820-4492-99B4-1B9CD8539A77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlzaBox.Api.Test", "AlzaBox.Api.Test\AlzaBox.Api.Test.csproj", "{28D1420D-E761-47C1-B0F7-D39CD415DD44}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlzaBox.API.WebExample", "AlzaBox.API.WebExample\AlzaBox.API.WebExample.csproj", "{591B2DD2-C43D-4F3D-AA45-31F87C9D4FF0}"
 EndProject
 Global
