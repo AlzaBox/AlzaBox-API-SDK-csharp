@@ -3,6 +3,12 @@
 - **Warning!** Use it for your own risk, now.
 - This project is licensed under the terms of the MIT license.
 
+### How to communicate?
+
+We can communicate with each other on discord completely openly, without prejudices, without worries, but also without guarantees!
+
+[Link to discord server](https://discord.gg/BFuDPzRxAX)
+
 ### How to be happy 
 The happy path scenario is marked with a white background. In this case, you just need to use the **Reserve** method and learn to receive callbacks.
 
