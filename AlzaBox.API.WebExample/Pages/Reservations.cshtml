@@ -20,6 +20,7 @@
              <td></td>
              <td></td>
              <td></td>
+             <td></td>
              <td><button type="submit" asp-page="Reservations" asp-page-handler="search" class="btn btn-primary">Search</button></td>
          </tr>
          </form>
@@ -28,6 +29,7 @@
             <td>Id</td>
             <td>Status</td>
             <td>Type</td>
+            <td>PIN</td>
             <td>ExpirationDate</td>
             <td>BoxId</td>
             <td>Actions</td>
@@ -42,6 +44,7 @@
                 </td>
                 <td>@item.Attributes.Status</td>
                 <td>@item.Attributes.Type</td>
+                <td>@item.Attributes.Pin</td>
                 <td>@item.Attributes.ExpirationDate</td>
                 <td>@item.Relationships.Box.Id</td>
                 <td>

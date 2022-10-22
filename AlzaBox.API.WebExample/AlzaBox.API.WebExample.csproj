@@ -14,7 +14,7 @@
 
     <ItemGroup>
       <PackageReference Include="Altairis.TagHelpers" Version="1.12.0" />
-      <PackageReference Include="Alzabox.API.SDK" Version="0.0.9" />
+      <PackageReference Include="Alzabox.API.SDK" Version="0.0.14" />
       <PackageReference Include="ClosedXML" Version="0.96.0" />
       <PackageReference Include="Microsoft.AspNetCore.Diagnostics.Abstractions" Version="2.2.0" />
       <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.7" />

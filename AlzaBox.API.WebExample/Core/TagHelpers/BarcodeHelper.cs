@@ -30,6 +30,7 @@ public class BarcodeHelper: TagHelper {
             output.Attributes.Add("height", image.Height); 
             output.Attributes.Add("alt", alt);
             output.Attributes.Add("src", string.Format(image.ToBase64String(PngFormat.Instance)));
+            
         }
     } 
 } 

@@ -10,17 +10,9 @@ public class ReservationClient
     
     public ReservationClient(HttpClient httpClient) => _httpClient = httpClient;
     
-    public async Task<AlzaBox.API.Models.Reservation> Get(string reservationId)
+    public async Task<ReservationsResponse> Get(string reservationId)
     {
-        var response = await GetBase(reservationId);
-        if (response.Data != null)
-        {
-            return response.Data[0];
-        }
-        else
-        {
-            return null;
-        }
+        return await GetBase(reservationId);
     }
 
     public async Task<AlzaBox.API.Models.ReservationsResponse> GetAll(int pageLimit = 10, int pageOffset = 0,

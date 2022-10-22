@@ -71,7 +71,8 @@ public class Reservations : BasePageModel
         
         if (!string.IsNullOrWhiteSpace(ReservationSearch.Id))
         {
-            var reservation = await _abapi.client.Reservations.Get(ReservationSearch.Id);
+            var reservationsResponse = await _abapi.client.Reservations.Get(ReservationSearch.Id);
+            var reservation = reservationsResponse.Data.FirstOrDefault();
             if (reservation != null)
             {
                 ReservationsData.Add(reservation);

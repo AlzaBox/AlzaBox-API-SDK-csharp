@@ -10,10 +10,13 @@ public class ABAPIService
     public readonly AlzaBoxClient client;
     private readonly HttpContext _httpContext;
 
-    public ABAPIService(IHttpContextAccessor contextAccessor)
+    public ABAPIService(IHttpContextAccessor contextAccessor, IConfiguration configuration)
     {
+        var abIdmUrl = configuration["ABAPIService:ABIdmUrl"];
+        var abConnectorUrl = configuration["ABAPIService:ABConnectorUrl"];
+        
         _httpContext = contextAccessor.HttpContext;
-        client = new AlzaBoxClient();
+        client = new AlzaBoxClient(abIdmUrl, abConnectorUrl);
         client.ExternalLogin(GetCookieToken());
     }
 

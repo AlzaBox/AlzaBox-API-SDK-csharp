@@ -27,7 +27,9 @@ public class Reservation : BasePageModel
     {
         try
         {
-            Entity = Entity.Map(await _abapi.client.Reservations.Get(id));
+            var reservationsResponse = await _abapi.client.Reservations.Get(id);
+            var reservation = reservationsResponse.Data.FirstOrDefault();
+            Entity = Entity.Map(reservation);
             var boxes = await _abapi.client.Boxes.Get(Entity.BoxId);
             BoxData = boxes.Data[0];
         }
@@ -51,8 +53,9 @@ public class Reservation : BasePageModel
         }
         else
         {
-            var reservationResponse1 = await _abapi.client.Reservations.Get(id);
-            Entity = Entity.Map(reservationResponse1);
+            var reservationsResponse = await _abapi.client.Reservations.Get(id);
+            var reservation = reservationsResponse.Data.FirstOrDefault();
+            Entity = Entity.Map(reservation);
             var boxes = await _abapi.client.Boxes.Get(Entity.BoxId);
             BoxData = boxes.Data[0];
             SetFlash(FlashMessageType.Danger, reservationResponse.Metadata);
@@ -65,7 +68,8 @@ public class Reservation : BasePageModel
     {
         try
         {
-            var reservation = await _abapi.client.Reservations.Get(id);
+            var reservationsResponse = await _abapi.client.Reservations.Get(id);
+            var reservation = reservationsResponse.Data.FirstOrDefault();
             Entity = Entity.Map(reservation);
             var boxes = await _abapi.client.Boxes.Get(Entity.BoxId);
             BoxData = boxes.Data[0];
@@ -93,7 +97,8 @@ public class Reservation : BasePageModel
         }
         else
         {
-            var reservation = await _abapi.client.Reservations.Get(Entity.Id);
+            var reservationsResponse = await _abapi.client.Reservations.Get(Entity.Id);
+            var reservation = reservationsResponse.Data.FirstOrDefault();
             Entity = Entity.Map(reservation);
             var boxes = await _abapi.client.Boxes.Get(Entity.BoxId);
             BoxData = boxes.Data[0];

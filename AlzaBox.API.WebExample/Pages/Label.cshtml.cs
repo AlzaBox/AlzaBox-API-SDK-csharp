@@ -29,7 +29,9 @@ public class Label : BasePageModel
     {
         try
         {
-            Entity = Entity.Map(await _abapi.client.Reservations.Get(id));
+            var reservationsResponse = await _abapi.client.Reservations.Get(id);
+            var reservation = reservationsResponse.Data.FirstOrDefault();
+            Entity = Entity.Map(reservation);
             var boxes = await _abapi.client.Boxes.Get(Entity.BoxId);
             BoxData = boxes.Data[0];
         }

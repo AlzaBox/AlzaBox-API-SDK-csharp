@@ -19,8 +19,11 @@
     {
         <barcode content="@Model.Entity.PackageNumber" alt="barcode"/><br/>
     }
+    
+    
     Scan this barcode to open slot.<br/>
-    PackageNumber: @Model.Entity.Id<br/>
+    PackageNumber: @Model.Entity.PackageNumber<br/>
+    ReservationId: @Model.Entity.Id<br/>
     @Model.BoxData.Attributes.Name<br/>
 </div>
 </body>

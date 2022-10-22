@@ -43,6 +43,9 @@ public class ReservationRequestAttributes
     [JsonPropertyName("paymentData")]
     public ReservationRequestPaymentData? PaymentData { get; set; }
 
+    [JsonPropertyName("pin")]
+    public string? Pin { get; set; }
+
     [JsonPropertyName("packages")]
     public List<ReservationRequestPackages>? Packages { get; set; }
 

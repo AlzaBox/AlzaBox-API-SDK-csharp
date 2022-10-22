@@ -32,3 +32,4 @@ app.UseAuthorization();
 app.UseCors();
 app.MapRazorPages();
 app.Run();
+

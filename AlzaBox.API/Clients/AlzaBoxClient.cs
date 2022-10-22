@@ -17,6 +17,9 @@ public class AlzaBoxClient
     
     public AlzaBoxClient(string? abIdmUrl = Constants.TestIdentityBaseUrl, string? abConnectorUrl = Constants.TestParcelLockersBaseUrl)
     {
+        abIdmUrl = (string.IsNullOrWhiteSpace(abIdmUrl)) ? Constants.TestIdentityBaseUrl : abIdmUrl;
+        abConnectorUrl = (string.IsNullOrWhiteSpace(abConnectorUrl)) ? Constants.TestIdentityBaseUrl : abConnectorUrl;
+
         _authenticationClient = new AuthenticationClient(abIdmUrl);
         _restABClient = new HttpClient();
         _restABClient.BaseAddress = new Uri(abConnectorUrl);
