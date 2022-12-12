@@ -1,0 +1,69 @@
+@page
+@model AlzaBox.API.WebExample.Pages.Courier
+
+@{
+}
+
+<form method="post" class="row g-3">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="Entity.Login" class="form-label"></label>
+        <input asp-for="Entity.Login" class="form-control"/>
+        <span asp-validation-for="Entity.Login" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Entity.Pin" class="form-label"></label>
+        <input asp-for="Entity.Pin" class="form-control"/>
+        <span asp-validation-for="Entity.Pin" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        @if (Model.Action == "Create")
+        {
+            <input type="submit" value="Create" class="btn btn-primary"/>
+        }
+        else
+        {
+            @if (Model.Action == "Update")
+            {
+                <input type="submit" asp-page-handler="Update" value="Update courier" class="btn btn-primary"/>
+            }
+        }
+
+        <a asp-page="/Couriers" class="btn btn-link">Couriers</a>
+        <a asp-page="/Index" class="btn btn-link">Home</a>
+    </div>
+
+    @if (Model.Action == "Update")
+    {
+        <div class="form-group">
+            <a asp-page="/Courier" asp-page-handler="AddBox" class="btn btn-primary">Add box</a>
+        </div>
+
+        <ul>
+            @if ((@Model.Entity.Attributes != null) && (@Model.Entity.Attributes.Boxes != null))
+            {
+                @foreach (var courierBox in @Model.Entity.Attributes.Boxes)
+                {
+                    <li>ID: @courierBox.Id PID: @courierBox.Pid <a asp-page="/Courier" asp-page-handler="RemoveBox" asp-route-boxId="@courierBox.Id" asp-route-login="@Model.Entity.Login" class="btn btn-link">Remove box</a></li>
+                }
+            }
+        </ul>
+    }
+
+    @if (Model.Action == "AddBox")
+    {
+        <form method="post" class="row g-3">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label class="form-label">Box Id</label>
+                <input Id="BoxId" name="BoxId" class="form-control"/>
+            </div>
+            <div class="form-group">
+                <input type="submit" asp-page-handler="AddBox" value="Add box access" class="btn btn-primary"/>
+            </div>
+        </form>
+    }
+</form>

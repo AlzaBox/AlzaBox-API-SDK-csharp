@@ -1,4 +1,4 @@
-# AlzaBox-API-SDK-csharp
+# AlzaBox-API-SDK-V2-csharp
 - Preview of opensource libraries for easier use of AlzaBox API.
 - **Warning!** Use it for your own risk, now.
 - This project is licensed under the terms of the MIT license.

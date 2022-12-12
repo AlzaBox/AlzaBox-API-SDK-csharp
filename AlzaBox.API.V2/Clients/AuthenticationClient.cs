@@ -1,8 +1,8 @@
 using System.Net.Http.Headers;
 using System.Text.Json;
-using AlzaBox.API.Models;
+using AlzaBox.API.V2.Models;
 
-namespace AlzaBox.API.Clients;
+namespace AlzaBox.API.V2.Clients;
 
 public class AuthenticationClient
 {

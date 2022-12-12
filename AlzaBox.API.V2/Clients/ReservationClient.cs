@@ -1,8 +1,8 @@
 using AlzaBox.API.Extensions;
-using AlzaBox.API.Models;
+using AlzaBox.API.V2.Models;
 using Microsoft.AspNetCore.Http;
 
-namespace AlzaBox.API.Clients;
+namespace AlzaBox.API.V2.Clients;
 
 public class ReservationClient
 {
@@ -15,14 +15,14 @@ public class ReservationClient
         return await GetBase(reservationId);
     }
 
-    public async Task<AlzaBox.API.Models.ReservationsResponse> GetAll(int pageLimit = 10, int pageOffset = 0,
+    public async Task<AlzaBox.API.V2.Models.ReservationsResponse> GetAll(int pageLimit = 10, int pageOffset = 0,
         string status = "")
     {
         var response = await GetBase("", pageLimit, pageOffset, status);
         return response;
     }
 
-    private async Task<AlzaBox.API.Models.ReservationsResponse> GetBase(string reservationId = "", int pageLimit = 10,
+    private async Task<AlzaBox.API.V2.Models.ReservationsResponse> GetBase(string reservationId = "", int pageLimit = 10,
         int pageOffset = 0,
         string status = "")
     {
@@ -41,7 +41,7 @@ public class ReservationClient
             queryString = queryString.Add("filter[Status]", status);
         }
         
-        return await _httpClient.GetWithQueryStringAsync<ReservationsResponse>("v1/reservation", queryString);
+        return await _httpClient.GetWithQueryStringAsync<ReservationsResponse>("v2/reservations", queryString);
     }
     
     public async Task<ReservationsResponse> GetStatus(string reservationId)
@@ -49,18 +49,17 @@ public class ReservationClient
         return await GetBase(reservationId);
     }    
 
-    public async Task<ReservationResponse> Reserve(string id, int boxId, string packageNumber, int hoursFromNow)
+    public async Task<ReservationResponse> Reserve(string id, int boxId, string packageNumber, int hoursFromNow, string reservationType = ReservationType.NonBinding, string customerPin = "")
     {
         var expirationDate = DateTime.Now.AddHours(hoursFromNow);
-        var reservationResponse = await Reserve(id, boxId, packageNumber, expirationDate);
+        var reservationResponse = await Reserve(id:id, boxId:boxId, packageNumber:packageNumber, reservationType:reservationType, startReservationDate:null, expirationDate: expirationDate, customerPin:customerPin );
         return reservationResponse;
     }
 
-    public async Task<ReservationResponse> Reserve(string id, int boxId, string packageNumber, DateTime expirationDate,
+    public async Task<ReservationResponse> Reserve(string id, int boxId, string packageNumber, string reservationType, DateTime? startReservationDate, DateTime expirationDate, string customerPin,
         float? depth = 1, float? height = 1, float? width = 1)
     {
         var expirationDateUtcString = expirationDate.ToString("O");
-        //var expirationDateUtcString = expirationDate.ToUniversalTime().ToString("O");
         var packages = new List<ReservationRequestPackages>();
         packages.Add(new ReservationRequestPackages()
         {
@@ -81,7 +80,7 @@ public class ReservationClient
                     {
                         Packages = packages,
                         ExpirationDate = expirationDateUtcString,
-                        Type = "NON_BINDING"
+                        Type = reservationType
                     },
                     Relationships = new ReservationRequestRelationships()
                     {
@@ -93,8 +92,19 @@ public class ReservationClient
                 }
             }
         };
+
+        if (startReservationDate != null)
+        {
+            reservationRequestBody.Data.Reservation.Attributes.StartReservationDate =
+                startReservationDate.Value.ToString("O");
+        }
+
+        if (!string.IsNullOrWhiteSpace(customerPin))
+        {
+            reservationRequestBody.Data.Reservation.Attributes.Pin = customerPin;
+        }
         
-        var response = await _httpClient.SendJsonAsync<ReservationResponse, ReservationRequest>(HttpMethod.Post, "v1/reservation", reservationRequestBody);
+        var response = await _httpClient.SendJsonAsync<ReservationResponse, ReservationRequest>(HttpMethod.Post, "v2/reservation", reservationRequestBody);
         return response;
     }   
 
@@ -108,7 +118,6 @@ public class ReservationClient
     public async Task<ReservationResponse> Extend(string reservationId, DateTime expirationDate)
     {
         var expirationDateUtcString = expirationDate.ToString("O");
-        //var expirationDateUtcString = expirationDate.ToUniversalTime().ToString("O");
         var reservationRequestBody = new ReservationRequest()
         {
             Data = new ReservationRequestData()
@@ -190,6 +199,6 @@ public class ReservationClient
 
     private async Task<ReservationResponse> PatchReservation(ReservationRequest reservationRequest)
     {
-        return await _httpClient.SendJsonAsync<ReservationResponse, ReservationRequest>(HttpMethod.Patch, "v1/reservation", reservationRequest);        
+        return await _httpClient.SendJsonAsync<ReservationResponse, ReservationRequest>(HttpMethod.Patch, "v2/reservation", reservationRequest);        
     }
 }

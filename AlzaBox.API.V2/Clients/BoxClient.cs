@@ -1,8 +1,8 @@
 using AlzaBox.API.Extensions;
-using AlzaBox.API.Models;
+using AlzaBox.API.V2.Models;
 using Microsoft.AspNetCore.Http;
 
-namespace AlzaBox.API.Clients
+namespace AlzaBox.API.V2.Clients
 {
     public class BoxClient
     {
@@ -25,22 +25,23 @@ namespace AlzaBox.API.Clients
         public async Task<float> GetBoxOccupancy(int boxId)
         {
             var boxResponse = await GetBoxBase(boxId, null, null, null, false, true);
-            var occupancy = boxResponse.Data[0].Attributes.Occupancy;
+            var occupancy = boxResponse.Data.Boxes.FirstOrDefault().Attributes.Occupancy;
             return occupancy.Value;
         }
 
+/* BoxFitting
         public async Task<BoxesResponse> GetBoxFitting(double packageWidth, double packageHeight, double packageDepth, int? boxId = null)
         {
             var boxResponse = await GetBoxBase(boxId, packageWidth, packageHeight, packageDepth, true, false);
             return boxResponse;
         }
-
+*/
         public async Task<BoxesResponse> GetByName(string name, bool full = false, bool occupancy = false)
         {
             var boxContent = new BoxesResponse();
             var searched = new List<Box>();
             var allBoxes = await GetBoxBase(null, null, null, null, full, occupancy);
-            foreach (var box in allBoxes.Data)
+            foreach (var box in allBoxes.Data.Boxes)
             {
                 if (box.Attributes.Name.Contains(name))
                 {
@@ -48,7 +49,7 @@ namespace AlzaBox.API.Clients
                 }
             }
 
-            boxContent.Data = searched;
+            boxContent.Data.Boxes = searched;
             return boxContent;
         }
         
@@ -98,7 +99,7 @@ namespace AlzaBox.API.Clients
                 query = query.Add("fields[box]", "occupancy");
             }
 
-            return await _httpClient.GetWithQueryStringAsync<BoxesResponse>("v1/box", query);
+            return await _httpClient.GetWithQueryStringAsync<BoxesResponse>("v2/boxes", query);
         }
     }
 }

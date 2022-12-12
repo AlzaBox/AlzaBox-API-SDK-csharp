@@ -1,6 +1,8 @@
+using AlzaBox.API.Clients;
 using AlzaBox.API.WebExample;
 using Microsoft.EntityFrameworkCore;
 using AlzaBox.API.WebExample.Data;
+
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");

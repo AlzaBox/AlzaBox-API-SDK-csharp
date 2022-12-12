@@ -31,7 +31,9 @@ public class Webhooks : ControllerBase
         var changeStatus = new ChangeStatusRequest()
         {
             CreatedAt = DateTime.Now,
-            RequestBody = bodyAsText
+            RequestBody = bodyAsText,
+            IP = _httpContext.Connection.RemoteIpAddress.ToString(),
+            RequestHeader =_httpContext.Request.Headers.Authorization.ToString()
         };
         _db.Add(changeStatus);
         _db.SaveChanges();

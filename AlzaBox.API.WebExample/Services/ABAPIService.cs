@@ -8,16 +8,22 @@ public class ABAPIService
     private readonly IConfiguration _configuration;
     private readonly Credentials _credentials;
     public readonly AlzaBoxClient client;
+    public readonly AlzaBox.API.V2.Clients.AlzaBoxClient clientV2;
     private readonly HttpContext _httpContext;
 
     public ABAPIService(IHttpContextAccessor contextAccessor, IConfiguration configuration)
     {
         var abIdmUrl = configuration["ABAPIService:ABIdmUrl"];
         var abConnectorUrl = configuration["ABAPIService:ABConnectorUrl"];
+        var abBaseLockersUrl = configuration["ABAPIService: ABBaseLockerUrl"];
         
         _httpContext = contextAccessor.HttpContext;
+        
         client = new AlzaBoxClient(abIdmUrl, abConnectorUrl);
         client.ExternalLogin(GetCookieToken());
+
+        clientV2 = new AlzaBox.API.V2.Clients.AlzaBoxClient(abIdmUrl, abConnectorUrl, abBaseLockersUrl);
+        clientV2.ExternalLogin(GetCookieToken());
     }
 
     public string? GetCookieToken()

@@ -1,0 +1,32 @@
+@page
+@model AlzaBox.API.WebExample.Pages.Couriers
+
+@{
+}
+
+<div class="form-group">
+    <a asp-page="courier" asp-page-handler="CreateCourier" class="btn btn-primary">Create courier</a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <caption>List of boxes</caption>
+        <thead>
+        <tr>
+            <td>Login</td>
+            <td>Pin</td>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.CouriersData)
+        {
+            <tr>
+                <td>
+                    <a asp-page="courier" asp-page-handler="UpdateCourier" asp-route-id="@item.Login">@item.Login</a>
+                </td>
+                <td>@item.Pin</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
