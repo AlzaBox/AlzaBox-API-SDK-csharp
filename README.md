@@ -1,4 +1,7 @@
 # AlzaBox-API-SDK-csharp
+
+![Nuget](https://img.shields.io/nuget/v/Alzabox.API.SDK)
+
 - Preview of opensource libraries for easier use of AlzaBox API.
 - **Warning!** Use it for your own risk, now.
 - This project is licensed under the terms of the MIT license.
