@@ -1,22 +1,24 @@
 using System.Net.Http.Headers;
-using AlzaBox.API.Models;
+using AlzaBox.API.V2.Models;
 
-namespace AlzaBox.API.Clients;
+namespace AlzaBox.API.V2.Clients;
 
 public class AlzaBoxClient
 {
     private readonly string _alzaBoxIdmUrl;
     private readonly string _alzaBoxLockerUrl;
     private readonly HttpClient _restABClient;
+    private readonly HttpClient _restABBaseClient;
     private readonly AuthenticationClient _authenticationClient;
 
     public string AccessToken { get; set; }
     public BoxClient Boxes { get; set; }
     public ReservationClient Reservations { get; set; }
     public CourierClient Couriers  { get; set; }
+    public VirtualBoxClient VirtualBox { get; set; }
     
     
-    public AlzaBoxClient(string? abIdmUrl = Constants.TestIdentityBaseUrl, string? abConnectorUrl = Constants.TestParcelLockersBaseUrl)
+    public AlzaBoxClient(string? abIdmUrl = Constants.TestIdentityBaseUrl, string? abConnectorUrl = Constants.TestParcelLockersBaseUrl, string? abBaseLockersUrl = Constants.TestVirtualLockersUrl)
     {
         abIdmUrl = (string.IsNullOrWhiteSpace(abIdmUrl)) ? Constants.TestIdentityBaseUrl : abIdmUrl;
         abConnectorUrl = (string.IsNullOrWhiteSpace(abConnectorUrl)) ? Constants.TestParcelLockersBaseUrl : abConnectorUrl;
@@ -30,9 +32,18 @@ public class AlzaBoxClient
             NoCache = true
         };
         
+        _restABBaseClient = new HttpClient();
+        //_restABBaseClient.BaseAddress = new Uri(abBaseLockersUrl);
+        _restABBaseClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        _restABBaseClient.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue()
+        {
+            NoCache = true
+        };
+        
         Boxes = new BoxClient(_restABClient);
         Reservations = new ReservationClient(_restABClient);
         Couriers = new CourierClient(_restABClient);
+        VirtualBox = new VirtualBoxClient(_restABBaseClient);
     }
 
     public async Task<AuthenticationResponse> Login(string username, string password, string clientId,
@@ -49,6 +60,7 @@ public class AlzaBoxClient
         var authenticationResponse = await _authenticationClient.Authenticate(credentials);
         AccessToken = authenticationResponse.AccessToken;
         _restABClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AccessToken);
+        _restABBaseClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AccessToken);
         
         return authenticationResponse;
     }
@@ -56,6 +68,7 @@ public class AlzaBoxClient
     public async void ExternalLogin(string accessToken)
     {
         AccessToken = accessToken;
-        _restABClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AccessToken);        
+        _restABClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AccessToken);
+        _restABBaseClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AccessToken);
     }
 }

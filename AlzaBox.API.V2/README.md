@@ -1,13 +1,4 @@
-# AlzaBox-API-SDK-csharp
-
-Nuget package for API V1:
-
-![Nuget](https://img.shields.io/nuget/v/Alzabox.API.SDK) 
-
-Nuget package for API V2:
-
-![Nuget](https://img.shields.io/nuget/v/Alzabox.API.SDK.V2)
-
+# AlzaBox-API-SDK-V2-csharp
 - Preview of opensource libraries for easier use of AlzaBox API.
 - **Warning!** Use it for your own risk, now.
 - This project is licensed under the terms of the MIT license.
@@ -23,18 +14,12 @@ The happy path scenario is marked with a white background. In this case, you jus
 
 ![This is an AlzaBox API SDK process diagram](https://raw.githubusercontent.com/AlzaBox/AlzaBox-API-SDK-csharp/main/AlzaBox_API_reservation_process.jpg)
 
-### API Versions
-
-AlzaBox API has now two versions: V1 and V2. You can see two projects and two cli examples in this reporitory.
-V2 has some new features and different classes for serialization/deserialization requests and responses.
-
 ### AlzaBoxClient 
 - has contructor with parameters to set test or production environment.
 - has login method to authenticate by your credentials
 - has boxes and reservation properties which divide API methods by domain
 
 ### Methods
-API V1 and V2:
 - Boxes.GetAll
 - Boxes.Get
 - Reservation.GetAll
@@ -44,12 +29,8 @@ API V1 and V2:
 - Reservation.Cancel
 - Reservation.Lock
 - Reservation.Unlock
-
-Only in V2:
 - Courier.Get
 - Courier.Create
-- Reservation can define your own PIN for customer
-- Reservation has time reservation with startReservationDate attribute
 
 # Credentials
 If you don't have any credentials for connecting to AlzaBox API, please contact our business key account at ...

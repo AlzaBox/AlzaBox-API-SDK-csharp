@@ -9,7 +9,7 @@
         <Company>Alza a.s.</Company> 
         <Copyright>Alza.cz a.s.</Copyright>
         <PackageProjectUrl>alzabox.co</PackageProjectUrl> 	    
-        <Version>0.0.14</Version> 
+        <Version>0.0.16</Version> 
   	    <Authors>Martin Matousek</Authors>   	    
   	    <PackageTags>Alzabox, Alza, Lockers</PackageTags> 
   	    <Description>This package will help with AlzaBox API</Description>
@@ -20,8 +20,5 @@
         <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
         <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
         <None Include="..\README.MD" Pack="true" PackagePath="\" />
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="ModelsV2" />
     </ItemGroup>
 </Project>

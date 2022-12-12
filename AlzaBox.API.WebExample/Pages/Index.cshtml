@@ -1,7 +1,7 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "AlzaBox Basic Operations Examples";
+    ViewData["Title"] = "AlzaBox Tools & Examples";
 }
 <div class="container">
     <div class="row">
@@ -12,16 +12,20 @@
                 <li>Create reservation</li>
                 <li>Cancel and extend reservation</li>
                 <li>Print Click&Collect label</li>
-                <li>@Model.Folder</li>
+                <li>VirtualBox operations</li>
             </ul>
             <p>Learn how to use our API:</p>
             <ul>
                 <li>
-                    <a href="https://alzaboxapi.docs.apiary.io" target="_blank">Apiary documentation</a>
+                    <a href="https://alzaboxapi.docs.apiary.io" target="_blank">AlzaBox API V1 documentation by Apiary</a>
                 </li>
+                <li>
+                    <a href="https://alzabox.atlassian.net/wiki/spaces/ABD/overview" target="_blank">AlzaBox API V2 documentation by Confluence</a>
+                </li>                
             </ul>
         </div>
         <div class="col">
+            <li>@Model.Folder</li>
         </div>
     </div>
 </div>
