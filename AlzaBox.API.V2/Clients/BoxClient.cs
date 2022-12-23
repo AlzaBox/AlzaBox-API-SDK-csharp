@@ -16,9 +16,9 @@ namespace AlzaBox.API.V2.Clients
             return response;
         }
 
-        public async Task<BoxesResponse> GetAll()
+        public async Task<BoxesResponse> GetAll(bool photos = false)
         {
-            var response = await this.GetBoxBase(null, null, null, null, false, false);
+            var response = await this.GetBoxBase(null, null, null, null, false, false, photos: photos);
             return response;
         }
 
@@ -36,11 +36,11 @@ namespace AlzaBox.API.V2.Clients
             return boxResponse;
         }
 */
-        public async Task<BoxesResponse> GetByName(string name, bool full = false, bool occupancy = false)
+        public async Task<BoxesResponse> GetByName(string name, bool full = false, bool occupancy = false, bool photos = false)
         {
             var boxContent = new BoxesResponse();
             var searched = new List<Box>();
-            var allBoxes = await GetBoxBase(null, null, null, null, full, occupancy);
+            var allBoxes = await GetBoxBase(null, null, null, null, full, occupancy, photos);
             foreach (var box in allBoxes.Data.Boxes)
             {
                 if (box.Attributes.Name.Contains(name))
@@ -54,7 +54,7 @@ namespace AlzaBox.API.V2.Clients
         }
         
         private async Task<BoxesResponse> GetBoxBase(int? boxId = null, double? packageWidth = null,
-            double? packageHeight = null, double? packageDepth = null, bool full = false, bool occupancy = false)
+            double? packageHeight = null, double? packageDepth = null, bool full = false, bool occupancy = false, bool photos = false)
         {
             var query = new QueryString();
             query = query.Add("fields[box]", "deliveryPin");
@@ -92,6 +92,11 @@ namespace AlzaBox.API.V2.Clients
                 query = query.Add("fields[box]", "unavailableReason");
                 query = query.Add("fields[box]", "tooLargePackages");
                 query = query.Add("fields[box]", "requiredSlots");
+            }
+
+            if (photos)
+            {
+                query = query.Add("fields[box]", "photos");
             }
 
             if (occupancy)
