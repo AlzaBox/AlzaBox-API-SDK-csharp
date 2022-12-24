@@ -9,10 +9,10 @@ namespace AlzaBox.API.V2.Clients
         private readonly HttpClient _httpClient;
 
         public BoxClient(HttpClient httpClient) => _httpClient = httpClient;
-        
-        public async Task<BoxesResponse> Get(int boxId)
+
+        public async Task<BoxesResponse> Get(int boxId, bool photos = false)
         {
-            var response = await this.GetBoxBase(boxId);
+            var response = await this.GetBoxBase(boxId, photos: photos);
             return response;
         }
 
@@ -28,14 +28,15 @@ namespace AlzaBox.API.V2.Clients
             var occupancy = boxResponse.Data.Boxes.FirstOrDefault().Attributes.Occupancy;
             return occupancy.Value;
         }
-
-/* BoxFitting
+        
         public async Task<BoxesResponse> GetBoxFitting(double packageWidth, double packageHeight, double packageDepth, int? boxId = null)
         {
+            throw new Exception("Box fitting is deprecated API function");
+            
             var boxResponse = await GetBoxBase(boxId, packageWidth, packageHeight, packageDepth, true, false);
             return boxResponse;
         }
-*/
+
         public async Task<BoxesResponse> GetByName(string name, bool full = false, bool occupancy = false, bool photos = false)
         {
             var boxContent = new BoxesResponse();
@@ -57,6 +58,14 @@ namespace AlzaBox.API.V2.Clients
             double? packageHeight = null, double? packageDepth = null, bool full = false, bool occupancy = false, bool photos = false)
         {
             var query = new QueryString();
+            var relativeUri = "v2/boxes";
+            
+            if ((boxId.HasValue) && (boxId > 0))
+            {
+                query = query.Add("filter[id]", boxId.Value.ToString());
+                relativeUri = "v2/box";
+            }
+            
             query = query.Add("fields[box]", "deliveryPin");
             query = query.Add("fields[box]", "name");
             query = query.Add("fields[box]", "address");
@@ -81,11 +90,6 @@ namespace AlzaBox.API.V2.Clients
                 query = query.Add("filter[package][width]", packageWidth.Value.ToString());
             }
             
-            if ((boxId.HasValue) && (boxId > 0))
-            {
-                query = query.Add("filter[id]", boxId.Value.ToString());
-            }
-
             if ((boxId > 0) && full)
             {
                 query = query.Add("fields[box]", "fittingPackages");
@@ -104,7 +108,7 @@ namespace AlzaBox.API.V2.Clients
                 query = query.Add("fields[box]", "occupancy");
             }
 
-            return await _httpClient.GetWithQueryStringAsync<BoxesResponse>("v2/boxes", query);
+            return await _httpClient.GetWithQueryStringAsync<BoxesResponse>(relativeUri, query);
         }
     }
 }
