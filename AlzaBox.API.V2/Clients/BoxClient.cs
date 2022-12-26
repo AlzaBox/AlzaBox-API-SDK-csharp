@@ -10,30 +10,30 @@ namespace AlzaBox.API.V2.Clients
 
         public BoxClient(HttpClient httpClient) => _httpClient = httpClient;
 
-        public async Task<BoxesResponse> Get(int boxId, bool photos = false)
+        public async Task<BoxResponse> Get(int boxId, bool photos = false)
         {
-            var response = await this.GetBoxBase(boxId, photos: photos);
+            var response = await this.GetBoxBase<BoxResponse>(boxId, photos: photos);
             return response;
         }
 
         public async Task<BoxesResponse> GetAll(bool photos = false)
         {
-            var response = await this.GetBoxBase(null, null, null, null, false, false, photos: photos);
+            var response = await this.GetBoxBase<BoxesResponse>(null, null, null, null, false, false, photos: photos);
             return response;
         }
 
         public async Task<float> GetBoxOccupancy(int boxId)
         {
-            var boxResponse = await GetBoxBase(boxId, null, null, null, false, true);
-            var occupancy = boxResponse.Data.Boxes.FirstOrDefault().Attributes.Occupancy;
+            var boxResponse = await GetBoxBase<BoxResponse>(boxId, null, null, null, false, true);
+            var occupancy = boxResponse.Data.Box.Attributes.Occupancy;
             return occupancy.Value;
         }
         
-        public async Task<BoxesResponse> GetBoxFitting(double packageWidth, double packageHeight, double packageDepth, int? boxId = null)
+        public async Task<BoxesResponse> GetBoxFitting(double packageWidth, double packageHeight, double packageDepth)
         {
             throw new Exception("Box fitting is deprecated API function");
             
-            var boxResponse = await GetBoxBase(boxId, packageWidth, packageHeight, packageDepth, true, false);
+            var boxResponse = await GetBoxBase<BoxesResponse>(null, packageWidth, packageHeight, packageDepth, true, false);
             return boxResponse;
         }
 
@@ -41,7 +41,7 @@ namespace AlzaBox.API.V2.Clients
         {
             var boxContent = new BoxesResponse();
             var searched = new List<Box>();
-            var allBoxes = await GetBoxBase(null, null, null, null, full, occupancy, photos);
+            var allBoxes = await GetBoxBase<BoxesResponse>(null, null, null, null, full, occupancy, photos);
             foreach (var box in allBoxes.Data.Boxes)
             {
                 if (box.Attributes.Name.Contains(name))
@@ -54,7 +54,7 @@ namespace AlzaBox.API.V2.Clients
             return boxContent;
         }
         
-        private async Task<BoxesResponse> GetBoxBase(int? boxId = null, double? packageWidth = null,
+        private async Task<T> GetBoxBase<T>(int? boxId = null, double? packageWidth = null,
             double? packageHeight = null, double? packageDepth = null, bool full = false, bool occupancy = false, bool photos = false)
         {
             var query = new QueryString();
@@ -108,7 +108,7 @@ namespace AlzaBox.API.V2.Clients
                 query = query.Add("fields[box]", "occupancy");
             }
 
-            return await _httpClient.GetWithQueryStringAsync<BoxesResponse>(relativeUri, query);
+            return await _httpClient.GetWithQueryStringAsync<T>(relativeUri, query);
         }
     }
 }
