@@ -1,12 +1,11 @@
-using System.Net;
 using System.Text.Json.Serialization;
 
 namespace AlzaBox.API.V2.Models;
 
-public class BoxesResponse : BaseResponse
+public class BoxResponse : BaseResponse
 {
     [JsonPropertyName("data")]
-    public BoxesItems Data { get; set; }
+    public BoxItem Data { get; set; }
     
     [JsonPropertyName("errors")]
     public string? Errors { get; set; }
@@ -15,8 +14,8 @@ public class BoxesResponse : BaseResponse
     public string? Metadata { get; set; }
 }
 
-public class BoxesItems
+public class BoxItem
 {
-    [JsonPropertyName("boxes")]
-    public List<Box>? Boxes { get; set; }
+    [JsonPropertyName("box")]
+    public Box? Box { get; set; }
 }
