@@ -29,6 +29,7 @@ namespace AlzaBox.API.V2.Clients
             return occupancy.Value;
         }
         
+        [Obsolete("Box fitting is deprecated API function")]
         public async Task<BoxesResponse> GetBoxFitting(double packageWidth, double packageHeight, double packageDepth)
         {
             throw new Exception("Box fitting is deprecated API function");
@@ -41,8 +42,13 @@ namespace AlzaBox.API.V2.Clients
         {
             var boxContent = new BoxesResponse();
             var searched = new List<Box>();
-            var allBoxes = await GetBoxBase<BoxesResponse>(null, null, null, null, full, occupancy, photos);
-            foreach (var box in allBoxes.Data.Boxes)
+            var allBoxesResponse = await GetBoxBase<BoxesResponse>(null, null, null, null, full, occupancy, photos);
+            if (allBoxesResponse.Errors != null) 
+            {
+                return allBoxesResponse;
+            }
+            
+            foreach (var box in allBoxesResponse.Data.Boxes)
             {
                 if (box.Attributes.Name.Contains(name))
                 {
@@ -58,12 +64,14 @@ namespace AlzaBox.API.V2.Clients
             double? packageHeight = null, double? packageDepth = null, bool full = false, bool occupancy = false, bool photos = false)
         {
             var query = new QueryString();
-            var relativeUri = "v2/boxes";
+            //var relativeUri = "v2/boxes";
+
+            var relativeUri = (typeof(T) == typeof(BoxesResponse)) ? "v2/boxes" : "v2/box";   
             
             if ((boxId.HasValue) && (boxId > 0))
             {
                 query = query.Add("filter[id]", boxId.Value.ToString());
-                relativeUri = "v2/box";
+                //relativeUri = "v2/box";
             }
             
             query = query.Add("fields[box]", "deliveryPin");
