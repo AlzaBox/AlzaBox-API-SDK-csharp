@@ -65,7 +65,7 @@ public class ReservationRequestPackages
     [JsonPropertyName("width")]
     public float? Width { get; set; }
 
-    [JsonPropertyName("barCode")]
+    [JsonPropertyName("barcode")]
     public string? BarCode { get; set; }
 
     [JsonPropertyName("packageState")]
