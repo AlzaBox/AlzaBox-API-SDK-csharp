@@ -12,7 +12,7 @@
         <Company>Alza a.s.</Company> 
         <Copyright>Alza.cz a.s.</Copyright>
         <PackageProjectUrl>alzabox.co</PackageProjectUrl> 	    
-        <Version>0.0.5</Version> 
+        <Version>0.0.6</Version> 
   	<Authors>Martin Matousek</Authors>   	    
   	<PackageTags>Alzabox, Alza, Lockers</PackageTags> 
   	<Description>This package will help with AlzaBox API</Description>

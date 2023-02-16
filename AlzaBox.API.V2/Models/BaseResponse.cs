@@ -23,11 +23,14 @@ public class Error
     public string? Path { get; set; }
 
     [JsonPropertyName("extensions")]
-    public List<ErrorResponseExtension>? Extensions { get; set; }
+    public ErrorResponseExtension? Extensions { get; set; }
 }
 
 public class ErrorResponseExtension
 {
     [JsonPropertyName("code")]
     public string? Code { get; set; }
+    
+    [JsonPropertyName("translation")]
+    public string? Translation { get; set; }    
 }

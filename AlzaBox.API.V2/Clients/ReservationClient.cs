@@ -1,3 +1,8 @@
+using System.Net;
+using System.Net.Http.Json;
+using System.Runtime.Serialization;
+using System.Text;
+using System.Text.Json;
 using AlzaBox.API.Extensions;
 using AlzaBox.API.V2.Models;
 using Microsoft.AspNetCore.Http;
@@ -103,9 +108,29 @@ public class ReservationClient
         {
             reservationRequestBody.Data.Reservation.Attributes.Pin = customerPin;
         }
-        
-        var response = await _httpClient.SendJsonAsync<ReservationResponse, ReservationRequest>(HttpMethod.Post, "v2/reservation", reservationRequestBody);
-        return response;
+
+        var jsonInString = JsonSerializer.Serialize(reservationRequestBody);
+        var httpContent = new StringContent(jsonInString, Encoding.UTF8, "application/json");
+
+        var responseMessage = await _httpClient.PostAsync("v2/reservation", httpContent);
+
+        if (responseMessage.StatusCode != HttpStatusCode.InternalServerError)
+        {
+            var content = await responseMessage.Content.ReadAsStringAsync();
+            try
+            {
+                var response = JsonSerializer.Deserialize<ReservationResponse>(content);
+                return response;
+            }
+            catch (JsonException ex)
+            {
+                throw new JsonException($"Can't deserialize response: {content}", ex);
+            }
+        } else
+        {
+            var content = await responseMessage.Content.ReadAsStringAsync();
+            throw new HttpRequestException(content, null, responseMessage.StatusCode);
+        }
     }   
 
     public async Task<ReservationResponse> Extend(string reservationId, int hoursFromNow = 24)
