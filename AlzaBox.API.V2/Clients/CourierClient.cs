@@ -49,19 +49,18 @@ public class CourierClient
         }
     }
 
-    public async Task<CreateOrUpdateCourierResponse> Create(string login, string pin,
-        List<CourierBox> boxes, string accessType = CourierAccessType.Specific)
+    public async Task<CreateOrUpdateCourierResponse> Create(string login, string pin, string accessType = CourierAccessType.Full,
+        List<CourierBox> boxes = null)
     {
-        return await CreateOrUpdate(HttpMethod.Post, login, pin, boxes, accessType);
+        return await CreateOrUpdate(HttpMethod.Post, login, pin, accessType, boxes);
     }
 
-    public async Task<CreateOrUpdateCourierResponse> Update(string login, string pin,
-        List<CourierBox> boxes, string accessType = CourierAccessType.Specific)
+    public async Task<CreateOrUpdateCourierResponse> Update(string login, string pin, string accessType = CourierAccessType.Full, List<CourierBox> boxes = null)
     {
-        return await CreateOrUpdate(HttpMethod.Patch, login, pin, boxes, accessType);
+        return await CreateOrUpdate(HttpMethod.Patch, login, pin, accessType, boxes);
     }
     
-    private async Task<CreateOrUpdateCourierResponse> CreateOrUpdate(HttpMethod method, string login, string pin, List<CourierBox> boxes, string accessType = CourierAccessType.Specific)
+    private async Task<CreateOrUpdateCourierResponse> CreateOrUpdate(HttpMethod method, string login, string pin, string accessType = CourierAccessType.Full, List<CourierBox> boxes = null )
     {
         var content = new CreateOrUpdateCourierRequest()
         {
