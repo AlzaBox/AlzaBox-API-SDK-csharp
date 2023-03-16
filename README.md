@@ -76,10 +76,9 @@ Courier management examples
 ```csharp
 var boxes = new List<CourierBox>();
 boxes.Add(new CourierBox() { Id = 1 });
-var createCourierResponse = await alzaBoxClient.Couriers.Create("login", "12345");
-var getCourierResponse = await alzaBoxClient.Couriers.Get("login");
-var updateCourierResponse = await alzaBoxClient.Couriers.Update("login", "54321", CourierAccessType.Specific, boxes);
-var getCourierResponse2 = await alzaBoxClient.Couriers.Get("login");
+await alzaBoxClient.Couriers.Create("login", "12345", CourierAccessType.Full);
+await alzaBoxClient.Couriers.Get("login");
+await alzaBoxClient.Couriers.Update("login", "54321", CourierAccessType.Specific, boxes);
 ```
 
 # Next steps
