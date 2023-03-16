@@ -10,7 +10,9 @@ Nuget package for API V2:
 
 - Preview of opensource libraries for easier use of AlzaBox API.
 - **Warning!** Use it for your own risk, now.
+- Its better if you fork this repository, and link forked source code, instead of link nuget packages
 - This project is licensed under the terms of the MIT license.
+
 
 ### How to communicate?
 
