@@ -46,9 +46,9 @@ API V1 and V2:
 - Reservation.Unlock
 
 Only in V2:
-- Courier.Get
-- Courier.Create
+- Courier.Get, Create, Update
 - Reservation can define your own PIN for customer
+- Reservation type (NON-BINDING, IMMEDIATE, TIME)
 - Reservation has time reservation with startReservationDate attribute
 
 # Credentials
