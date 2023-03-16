@@ -109,7 +109,7 @@ public class CourierWithAttributes
     /// <example>123456</example>
     [JsonPropertyName("pin")]
     public string? Pin { get; set; }
-
+    
     /// <summary>
     /// Courier's attributes
     /// </summary>
@@ -132,6 +132,14 @@ public class CourierWithoutAttributes
     /// <example>123456</example>
     [JsonPropertyName("pin")]
     public string? Pin { get; set; }
+    
+    /// <summary>
+    /// Boxes access type
+    /// </summary>
+    /// <example>SPECIFIC</example>
+    [JsonPropertyName("boxesAccessType")]
+    public string BoxesAccessType { get; set; }
+    
 
     /// <summary>
     /// Boxes to which courier has access
@@ -145,6 +153,14 @@ public class CourierWithoutAttributes
 /// </summary>
 public class CourierAttributes
 {
+    /// <summary>
+    /// Boxes access type
+    /// </summary>
+    /// <example>SPECIFIC</example>
+    [JsonPropertyName("boxesAccessType")]
+    public string BoxesAccessType { get; set; }
+    
+    
     /// <summary>
     /// Boxes to which courier has access
     /// </summary>

@@ -24,6 +24,7 @@ public class CourierClient
     {
         var queryString = new QueryString();
         queryString = queryString.Add("fields[courier]", "boxes");
+        queryString = queryString.Add("fields[courier]", "boxesAccessType");
         
         if (!string.IsNullOrWhiteSpace(login))
         {
@@ -49,18 +50,18 @@ public class CourierClient
     }
 
     public async Task<CreateOrUpdateCourierResponse> Create(string login, string pin,
-        List<CourierBox> boxes)
+        List<CourierBox> boxes, string accessType = CourierAccessType.Specific)
     {
-        return await CreateOrUpdate(HttpMethod.Post, login, pin, boxes);
+        return await CreateOrUpdate(HttpMethod.Post, login, pin, boxes, accessType);
     }
 
     public async Task<CreateOrUpdateCourierResponse> Update(string login, string pin,
-        List<CourierBox> boxes)
+        List<CourierBox> boxes, string accessType = CourierAccessType.Specific)
     {
-        return await CreateOrUpdate(HttpMethod.Patch, login, pin, boxes);
+        return await CreateOrUpdate(HttpMethod.Patch, login, pin, boxes, accessType);
     }
     
-    private async Task<CreateOrUpdateCourierResponse> CreateOrUpdate(HttpMethod method, string login, string pin, List<CourierBox> boxes)
+    private async Task<CreateOrUpdateCourierResponse> CreateOrUpdate(HttpMethod method, string login, string pin, List<CourierBox> boxes, string accessType = CourierAccessType.Specific)
     {
         var content = new CreateOrUpdateCourierRequest()
         {
@@ -70,13 +71,14 @@ public class CourierClient
                 {
                     Login = login,
                     Pin = pin,
+                    BoxesAccessType = accessType,
                     Boxes = boxes
                 }
             } 
         };
 
         var serializedContent = JsonSerializer.Serialize(content);
-        var response = await _httpClient.SendJsonAsync(method, "v2/courier?fields[courier]=boxes", serializedContent);
+        var response = await _httpClient.SendJsonAsync(method, "v2/courier?fields[courier]=boxes&fields[courier]=boxesAccessType", serializedContent);
         if (response.IsSuccessStatusCode)
         {
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -87,8 +89,7 @@ public class CourierClient
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Data);
-                throw new SerializationException("nefunguje to");
+                throw new SerializationException("Error when deserializing responseContent to CreateOrUpdateCourierResponse");
             }
         }
         else

@@ -16,3 +16,9 @@ public static class ReservationType
     public const string Immediate = "IMMEDIATE";
     public const string Time = "TIME";
 }
+
+public static class CourierAccessType
+{
+    public const string Full = "FULL";
+    public const string Specific = "SPECIFIC";
+}
