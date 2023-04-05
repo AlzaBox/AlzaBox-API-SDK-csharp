@@ -40,6 +40,9 @@ public class ReservationRequestAttributes
 
     [JsonPropertyName("type")]
     public string? Type { get; set; }
+    
+    [JsonPropertyName("blocked")]
+    public bool? Blocked { get; set; }
 }
 
 public class ReservationRequestPaymentData
