@@ -23,7 +23,7 @@ public class ABAPIService
         client.ExternalLogin(GetCookieToken());
 
         clientV2 = new AlzaBox.API.V2.Clients.AlzaBoxClient(abIdmUrl, abConnectorUrl, abBaseLockersUrl);
-        clientV2.ExternalLogin(GetCookieToken());
+        clientV2.SetAccessToken(GetCookieToken());
     }
 
     public string? GetCookieToken()

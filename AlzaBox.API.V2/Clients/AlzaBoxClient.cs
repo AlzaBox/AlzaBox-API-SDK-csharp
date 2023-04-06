@@ -11,13 +11,14 @@ public class AlzaBoxClient
     private readonly HttpClient _restABBaseClient;
     private readonly AuthenticationClient _authenticationClient;
 
+    private Credentials Credentials { get; set; }
+
     public string AccessToken { get; set; }
     public BoxClient Boxes { get; set; }
     public ReservationClient Reservations { get; set; }
     public CourierClient Couriers  { get; set; }
     public VirtualBoxClient VirtualBox { get; set; }
-    
-    
+
     public AlzaBoxClient(string? abIdmUrl = Constants.TestIdentityBaseUrl, string? abConnectorUrl = Constants.TestParcelLockersBaseUrl, string? abBaseLockersUrl = Constants.TestVirtualLockersUrl)
     {
         abIdmUrl = (string.IsNullOrWhiteSpace(abIdmUrl)) ? Constants.TestIdentityBaseUrl : abIdmUrl;
@@ -49,7 +50,7 @@ public class AlzaBoxClient
     public async Task<AuthenticationResponse> Login(string username, string password, string clientId,
         string clientSecret)
     {
-        var credentials = new Credentials()
+        Credentials = new Credentials()
         {
             UserName = username,
             Password = password,
@@ -57,7 +58,7 @@ public class AlzaBoxClient
             ClientSecret = clientSecret
         };
         
-        var authenticationResponse = await _authenticationClient.Authenticate(credentials);
+        var authenticationResponse = await _authenticationClient.Authenticate(Credentials);
         AccessToken = authenticationResponse.AccessToken;
         _restABClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AccessToken);
         _restABBaseClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AccessToken);
@@ -65,7 +66,7 @@ public class AlzaBoxClient
         return authenticationResponse;
     }
 
-    public async void ExternalLogin(string accessToken)
+    public async void SetAccessToken(string accessToken)
     {
         AccessToken = accessToken;
         _restABClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AccessToken);
