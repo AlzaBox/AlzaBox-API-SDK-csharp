@@ -40,9 +40,21 @@ public class ReservationRequestAttributes
 
     [JsonPropertyName("type")]
     public string? Type { get; set; }
-    
+
     [JsonPropertyName("blocked")]
     public bool? Blocked { get; set; }
+
+    [JsonPropertyName("openerKey")]
+    public string? OpenerKey { get; set; }
+
+    [JsonPropertyName("createdAt")]
+    public DateTime CreatedAt { get; set; }
+
+    [JsonPropertyName("docNumber")]
+    public string? DocNumber { get; set; }
+
+    [JsonPropertyName("flowType")]
+    public string? FlowType { get; set; }
 }
 
 public class ReservationRequestPaymentData
@@ -82,7 +94,7 @@ public class ReservationRequestShippingList
 {
     [JsonPropertyName("key")]
     public string? Key { get; set; }
-    
+
     [JsonPropertyName("carrier")]
     public ReservationRequestCarrier? Carrier { get; set; }
 }
